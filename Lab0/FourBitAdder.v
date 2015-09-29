@@ -13,12 +13,14 @@ module FullAdder4bit
 		input[3:0] b
 	);
 
+	// four 1-bit adders chained together to make a 4-bit adder
 	wire c0, c1,c2;
 	structuralFullAdder adder0 (sum[0], c0, a[0], b[0], 0);
 	structuralFullAdder adder1 (sum[1], c1, a[1], b[1], c0);
 	structuralFullAdder adder2 (sum[2], c2, a[2], b[2], c1);
 	structuralFullAdder adder3 (sum[3], carryout, a[3], b[3], c2);
 
+	// XOR the carry in and carryout of the 4th adder to check for overflow
 	`XOR(overflow, c2, carryout);
 endmodule
 
