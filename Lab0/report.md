@@ -10,5 +10,5 @@ However, we also wanted to show that our adder can gracefully handle addition of
 When we first programmed our board, we did not take into account that we would be doing 2's complement addition; we only thought about unsigned integers. Thus, once we tried to add two negative numbers, our board failed the test and did not show any overflow. Originally, our board could not handle overflow. In many instances (INSERT EXAMPLES HERE) two positive numbers would sum to a negative number and two negative numbers would yield a positive number. As a result, we realized that we had to do handle overflows differently. XOR
 
 ## 4. Summary of Testing on board
-
+TALK ABOUT THE 16 CASES AND PUT PICTURES FOR ONE TEST
 ## 5. Summary Statistics of Synthesized Design
