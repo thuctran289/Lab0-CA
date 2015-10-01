@@ -4,13 +4,12 @@
 `define NOT not #50
 `define XOR xor #50
 
-module FourAdder4bit
-	(
-		output [3:0] sum;
-		output carryout;
-		output overflow;
-		input [3:0] a;
-		input [3:0] b;
+module FourAdder4bit(
+		output [3:0] sum,
+		output carryout,
+		output overflow,
+		input [3:0] a,
+		input [3:0] b
 	);
 
 	// four 1-bit adders chained together to make a 4-bit adder
@@ -33,41 +32,39 @@ module test4BitAdd;
 	FourAdder4bit add(out, cout, overflow, a, b);
 
 	initial begin
-		$display(" a   b   carryin |   Sum       Carryout | Expected sum   Expected Carryout|", a, b, carryin,out, cout);
-		a = 4'b1111; b = 4'b0000; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1111                  0      |", a, b, carryin,out, cout);
-		a = 4'b1001; b = 4'b0001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1010                  0      |", a, b, carryin,out, cout);
-		a = 4'b1011; b = 4'b0001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1100                  0      |", a, b, carryin,out, cout);
-		a = 4'b1111; b = 4'b0001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0000                  1      |", a, b, carryin,out, cout);
-		a = 4'b1111; b = 4'b0000; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1111                  0      |", a, b, carryin,out, cout);
-		a = 4'b1111; b = 4'b1111; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1110                  1      |", a, b, carryin,out, cout);
-		a = 4'b1001; b = 4'b0110; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1111                  0      |", a, b, carryin,out, cout);
-		a = 4'b1010; b = 4'b1011; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1101                  0      |", a, b, carryin,out, cout);
-		a = 4'b0111; b = 4'b0001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1000                  0      |", a, b, carryin,out, cout);
-		a = 4'b1000; b = 4'b1000; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0000                  1      |", a, b, carryin,out, cout);
-		a = 4'b1010; b = 4'b1010; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0100                  1      |", a, b, carryin,out, cout);
-		a = 4'b0111; b = 4'b1110; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0101                  1      |", a, b, carryin,out, cout);
+		$display(" a      b      Sum     |   Carryout    Overflow | Expected sum   Expected Carryout  Expected Overflow|");
+		a = 4'b0000; b = 4'b0000; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0000                 0                  0       |", a, b, out, cout, overflow);
 		a = 4'b0001; b = 4'b0001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0010                  0      |", a, b, carryin,out, cout);
+		$display(" %b   %b   %b    |      %b           %b     |    0010                 0                  0       |", a, b, out, cout, overflow);
 		a = 4'b0010; b = 4'b0010; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0100                  0      |", a, b, carryin,out, cout);
+		$display(" %b   %b   %b    |      %b           %b     |    0100                 0                  0       |", a, b, out, cout, overflow);
 		a = 4'b0100; b = 4'b0100; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1000                  0      |", a, b, carryin,out, cout);
-		a = 4'b1001; b = 4'b1001; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    0010                  1      |", a, b, carryin,out, cout);
-		a = 4'b0101; b = 4'b0101; carryin = 0; #1000
-		$display(" %b   %b   %b    |   %b            %b   |    1010                  0      |", a, b, carryin,out, cout);
+		$display(" %b   %b   %b    |      %b           %b     |    1000                 0                  1       |", a, b, out, cout, overflow);
+		a = 4'b1000; b = 4'b1000; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0000                 1                  1       |", a, b, out, cout, overflow);
+		a = 4'b1111; b = 4'b1111; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    1110                 1                  0       |", a, b, out, cout, overflow);
+		a = 4'b0100; b = 4'b1100; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0000                 1                  0       |", a, b, out, cout, overflow);
+		a = 4'b1100; b = 4'b0100; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0000                 1                  0       |", a, b, out, cout, overflow);
+		a = 4'b1010; b = 4'b1001; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0011                 1                  1       |", a, b, out, cout, overflow);
+		a = 4'b1100; b = 4'b1011; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0111                 1                  1       |", a, b, out, cout, overflow);
+		a = 4'b1101; b = 4'b0110; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0011                 1                  0       |", a, b, out, cout, overflow);
+		a = 4'b1000; b = 4'b1001; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0001                 1                  1       |", a, b, out, cout, overflow);
+		a = 4'b1100; b = 4'b1000; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    0100                 1                  1       |", a, b, out, cout, overflow);
+		a = 4'b0100; b = 4'b0110; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    1010                 0                  1       |", a, b, out, cout, overflow);
+		a = 4'b0110; b = 4'b0100; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    1010                 0                  1       |", a, b, out, cout, overflow);
+		a = 4'b0101; b = 4'b0111; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    1100                 0                  1       |", a, b, out, cout, overflow);
 	end
 endmodule
 
