@@ -94,7 +94,7 @@ The following pictures are the test b0100 + b1100 = b0000, overflow = b0, carryo
 ![overflow = b0, carryout = b1](images/overflow_and_carryout.png)
 ## 5. Summary Statistics of Synthesized Design
 
-![](images/sum_stat2.jpg)
+![summary image](images/summary.png)
 Based on the summary statistics, we see that our implementation of the 4-Bit Full Adder used the following resources:
 
 1. Flip Flops (FF)
