@@ -96,12 +96,15 @@ The following pictures are the test b0100 + b1100 = b0000, overflow = b0, carryo
 ![](images/sum_stat2.jpg)
 Based on the summary statistics, we see that our implementation of the 4-Bit Full Adder used the following resources:
 
-1. FF
+1. Flip Flops (FF)
+  - 1%
+2. Look Up Tables (LUT)
+  - 1%
+3. Input/Output (I/O)
+  - 13%
+4. Clock Buffer (BUFG)
+  - 3%
+5. Power On Chip
+  - 7.318 W
 
-2.
-
-3.
-
-4.
-
-5.
+Based on the information above, we can see that the implementation has a relatively low spatial area/utilization on the FPGA. We use roughly 1% of the FPGA's available Flip Flops and Look up tables in the implementation. The most used resource was the I/O. 
