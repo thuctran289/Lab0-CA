@@ -35,6 +35,8 @@ module test4BitAdd;
 		$display(" a      b      Sum     |   Carryout    Overflow | Expected sum   Expected Carryout  Expected Overflow|");
 		a = 4'b0000; b = 4'b0000; carryin = 0; #1000
 		$display(" %b   %b   %b    |      %b           %b     |    0000                 0                  0       |", a, b, out, cout, overflow);
+		a = 4'b1111; b = 4'b1111; carryin = 0; #1000
+		$display(" %b   %b   %b    |      %b           %b     |    1110                 1                  0       |", a, b, out, cout, overflow);
 		a = 4'b0001; b = 4'b0001; carryin = 0; #1000
 		$display(" %b   %b   %b    |      %b           %b     |    0010                 0                  0       |", a, b, out, cout, overflow);
 		a = 4'b0010; b = 4'b0010; carryin = 0; #1000
@@ -43,8 +45,6 @@ module test4BitAdd;
 		$display(" %b   %b   %b    |      %b           %b     |    1000                 0                  1       |", a, b, out, cout, overflow);
 		a = 4'b1000; b = 4'b1000; carryin = 0; #1000
 		$display(" %b   %b   %b    |      %b           %b     |    0000                 1                  1       |", a, b, out, cout, overflow);
-		a = 4'b1111; b = 4'b1111; carryin = 0; #1000
-		$display(" %b   %b   %b    |      %b           %b     |    1110                 1                  0       |", a, b, out, cout, overflow);
 		a = 4'b0100; b = 4'b1100; carryin = 0; #1000
 		$display(" %b   %b   %b    |      %b           %b     |    0000                 1                  0       |", a, b, out, cout, overflow);
 		a = 4'b1100; b = 4'b0100; carryin = 0; #1000

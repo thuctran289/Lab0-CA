@@ -1,6 +1,12 @@
 # Lab 0 Report
 ## 1. Waveforms
+![Waveforms](images/Waveform.png)
 
+The above represents the waveform of the inputs and output of the Full Adder. We can see that there are glitches along the waveform such as at around T = 6200 ns.
+
+In order to have accurate results, one should wait for the glitches to settle. In terms of our implementation, we expect to wait 600 ns+ (Roughly 150 ns per individual full adder bit, cascaded four times with a final XOR at the end representing 50 ns).
+
+We get the above via noting that longest path in our full adder flowed through three gates that have an assumed 50 ns delay.
 ## 2. Test Case Strategy
 We chose our test cases to show, most importantly, that our adder can add, without failure, the numbers that it can and should be able to handle (unsigned 4-bit integers whose sum is also a 4-bit integer).
 
@@ -86,3 +92,16 @@ The following pictures are the test b0100 + b1100 = b0000, overflow = b0, carryo
 #### overflow = b0, carryout = b1
 ![overflow = b0, carryout = b1](images/overflow_and_carryout.png)
 ## 5. Summary Statistics of Synthesized Design
+
+![](images/sum_stat2.jpg)
+Based on the summary statistics, we see that our implementation of the 4-Bit Full Adder used the following resources:
+
+1. FF
+
+2.
+
+3.
+
+4.
+
+5.
