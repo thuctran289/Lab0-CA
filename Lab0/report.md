@@ -49,12 +49,13 @@ a      b      Sum     |   Carryout    Overflow | Expected sum   Expected Carryou
 ## 3. Test Case Failures
 After programming our board for the first time, we tried adding b0001 + b0001 and got the expected result of b0010. However, after trying this first test, we realized that we had not yet thoroughly read through either lab0_wrapper.v or the README.md and that we actually did not know what pressing each button would do or what different lights signified.
 
-We then read through lab0_wrapper.v and the README.md and realized that we had not taken into account adding in 2's complement; we had only considered unsigned integers. We tried adding two positive numbers, b0100 + b0100, and our board failed: we got the negative b1000 with no indication that this answer was wrong. After pressing button 3, neither the overflow (which should have been lit) nor the carryout LED (which should not have been lit) were lit.
+We then read through lab0_wrapper.v and the README.md and realized that we had not taken into account adding in 2's complement; we had only considered unsigned integers. We tried adding two positive numbers, b0100 + b0100, and our board failed: we got the negative b1000 with no indication that this answer was wrong. After pressing button 3, the overflow LED was not lit, even though it should have been.
 
 This failure made us realize that we had to figure out how to handle numbers that should result in an overflow. We considered two situations: b0100 + b0100 = b1000 and b1000 + b1000 = b[1]0000. In both situations, we realized that the carryin and carryout for the 4th bit are different. In cases without overflow, the carryin and carryout are the same (for example b0001 + b0001 = b0010 has both carryin and carryout of 0, while b1111 + b1111 = b[1]1110 have both carryin and carryout of 1). Thus, we decided that we had to XOR the carryin and carryout of the fourth bit and the result would be the overflow. After we added the XOR to our design, all tests that we ran on our board passed.
 
 ## 4. Summary of Testing on board
 To make sure our adder is fully functional, we devised various test cases to cover all the possible cases; the categories are as following (assume all numbers in examples are binary):
+
 1. adding on each of the four digits
     - examples:
       - 0010 + 0100 = 0110    
@@ -107,4 +108,4 @@ Based on the summary statistics, we see that our implementation of the 4-Bit Ful
 5. Power On Chip
   - 7.318 W
 
-Based on the information above, we can see that the implementation has a relatively low spatial area/utilization on the FPGA. We use roughly 1% of the FPGA's available Flip Flops and Look up tables in the implementation. The most used resource was the I/O. 
+Based on the information above, we can see that the implementation has a relatively low spatial area/utilization on the FPGA. We use roughly 1% of the FPGA's available Flip Flops and Look up tables in the implementation. The most used resource was the I/O.
