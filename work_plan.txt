@@ -1,0 +1,12 @@
+Work plan:
+
+n. Portion - time length - will be done by end of date
+
+1. Design at least four (half) operations of ALU on paper - 1 hour - Oct. 8
+2. Design rest of ALU operations on paper - 1 hour - Oct. 9
+3. Construct ALU in Verilog - 1 hour - Oct. 9
+4. Review gate delays and make adjustments to design to decrease delays - 2 hours - Oct. 10
+5. Deisgn test bench - 1 hour - Oct. 11
+6. Make changes based on test failures - 1 hour - Oct. 11
+7. Make more changes based on new test failures - 1 hour - Oct. 11
+8. Write report - 2 hours - Oct. 13
