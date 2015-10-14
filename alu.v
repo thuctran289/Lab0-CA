@@ -15,7 +15,7 @@
 `define bOR or #90
 `define ANDtri and #40
 
-
+// LUT to control the inputs of the ALU (the mux command and ~B)
 module ALUcontrolLUT (
         output reg[2:0]     muxindex,
         output reg  invertB,
@@ -23,27 +23,21 @@ module ALUcontrolLUT (
     );
 
     always @(ALUcommand) begin
-    case (ALUcommand)
-      `ADDo:  begin muxindex = 0; invertB=0; end    
-      `SUBo:  begin muxindex = 0; invertB=1; end
-      `XORo:  begin muxindex = 1; invertB=0; end    
-      `SLTo:  begin muxindex = 0; invertB=1; end
-      `ANDo:  begin muxindex = 3; invertB=0; end    
-      `NANDo: begin muxindex = 4; invertB=0; end
-      `NORo:  begin muxindex = 5; invertB=0; end    
-      `ORo:   begin muxindex = 6; invertB=0; end
-    endcase
-  end
+        case (ALUcommand)
+            `ADDo:  begin muxindex = 0; invertB=0; end    
+            `SUBo:  begin muxindex = 0; invertB=1; end
+            `XORo:  begin muxindex = 1; invertB=0; end    
+            `SLTo:  begin muxindex = 0; invertB=1; end
+            `ANDo:  begin muxindex = 3; invertB=0; end    
+            `NANDo: begin muxindex = 4; invertB=0; end
+            `NORo:  begin muxindex = 5; invertB=0; end    
+            `ORo:   begin muxindex = 6; invertB=0; end
+        endcase
+    end
 endmodule
 
-
-
-
-
-
-
-module ALU
-    (
+// Overall ALU 32-bit ALU, complete with control LUT
+module ALU (
         output[31:0]    result,
         output          carryout,
         output          zero,
@@ -83,10 +77,8 @@ module ALU
 
 endmodule
 
-
-
-
-module structuralALU(output out,
+module structuralALU(
+        output out,
         output carryout,
         input a,
         input b,
@@ -96,6 +88,7 @@ module structuralALU(output out,
     );
 
     wire aXORb, bInv, bChoice, aXORb_AND_Carryin, aNANDb, aANDb, aADDb, aNORb, aORb, aXORb_AND_Carryin__nor__aAndb;
+    
     //This covers the NOR and OR cases.
     `NOR(aNORb, a,b);
     `NOT(aORb, aNORb);
@@ -117,6 +110,7 @@ module structuralALU(output out,
     `AND(aXORb_AND_carryin, aXORb, carryin);
     `NOR(aXORb_AND_Carryin__nor__aAndb, aXORb_AND_carryin, aANDb);
     `NOT(carryout,  aXORb_AND_Carryin__nor__aAndb);
+    
     eightToOneMux eightonemux(aADDb, aXORb, 0, aANDb,aNANDb ,aNORb,aORb ,0, muxDevice, out );
 
 endmodule
@@ -140,8 +134,6 @@ module twoToOneMux(output out, input address, input in0, input in1);
 	`NAND(out, in0nandnAddr, in1nandAddr);
 endmodule 
 
-
-
 module eightToOneMux(input in0, input in1, input in2, input in3, input in4,input in5, input in6,input in7, input[2:0] addr, output out );
     wire temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, naddr0, naddr1, naddr2, nnaddr0, nnaddr1, nnaddr2;
     `NOT(naddr0, addr[0]);
@@ -163,8 +155,6 @@ module eightToOneMux(input in0, input in1, input in2, input in3, input in4,input
     `bOR(out, temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7);
 endmodule
 
-
-
 module testALU;
     wire [31:0]out;
     wire overflow, cout, zero;
@@ -178,7 +168,7 @@ module testALU;
         $dumpfile("alu.vcd");
         $dumpvars(0, testALU);
 
-        $display("Corolnt A B | R | OFL CO ZERO | Exp R Exp OFL Exp CO Exp Zero");
+        $display("Result A B | R | OFL CO ZERO | Exp R Exp OFL Exp CO Exp Zero");
 
         $display("                                                               ");
         $display("                            ADD Tests                          ");
