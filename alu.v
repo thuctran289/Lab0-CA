@@ -21,20 +21,19 @@ module ALUcontrolLUT (
         output reg[2:0]     muxindex,
         output reg  invertB,
         input[2:0]  ALUcommand,
-        output reg[31:0] sltResult,
         output reg sltSet
     );
 
     always @(ALUcommand) begin
         case (ALUcommand)
-            `ADDo:  begin muxindex = 0; invertB=0;  sltResult=0; sltSet=0; end    
-            `SUBo:  begin muxindex = 0; invertB=1;  sltResult=0; sltSet=0; end
-            `XORo:  begin muxindex = 1; invertB=0;  sltResult=0; sltSet=0; end    
-            `SLTo:  begin muxindex = 0; invertB=1;  sltResult=0; sltSet=1; end
-            `ANDo:  begin muxindex = 3; invertB=0;  sltResult=0; sltSet=0; end    
-            `NANDo: begin muxindex = 4; invertB=0;  sltResult=0; sltSet=0; end
-            `NORo:  begin muxindex = 5; invertB=0;  sltResult=0; sltSet=0; end    
-            `ORo:   begin muxindex = 6; invertB=0;  sltResult=0; sltSet=0; end
+            `ADDo:  begin muxindex = 0; invertB=0; sltSet=0; end    
+            `SUBo:  begin muxindex = 0; invertB=1; sltSet=0; end
+            `XORo:  begin muxindex = 1; invertB=0; sltSet=0; end    
+            `SLTo:  begin muxindex = 0; invertB=1; sltSet=1; end
+            `ANDo:  begin muxindex = 3; invertB=0; sltSet=0; end    
+            `NANDo: begin muxindex = 4; invertB=0; sltSet=0; end
+            `NORo:  begin muxindex = 5; invertB=0; sltSet=0; end    
+            `ORo:   begin muxindex = 6; invertB=0; sltSet=0; end
         endcase
     end
 endmodule
@@ -56,9 +55,10 @@ module ALU (
     wire notCommand2, notCommand1;
     wire tempOverflow;
     wire tempZero;
-    wire [31:0] sltResult;
+    wire sltRes;
+    wire [31:0]sltResult;
     wire sltSameSign, sltOppTemp, sltOpp, notOverflow, sltChoice;
-    ALUcontrolLUT aluControlLUT(deviceChoice,bInv,command, sltResult, sltChoice);
+    ALUcontrolLUT aluControlLUT(deviceChoice,bInv,command, sltChoice);
 
     genvar i;
     generate
@@ -84,10 +84,18 @@ module ALU (
 
     // SLT
     `NOT(notOverflow, tempOverflow);
-    `AND(sltOppTemp, tempresult[31], overflow);
-    `AND(sltOpp,sltOppTemp, operandA[31]);
+    `AND(sltOppTemp, tempresult[31], tempOverflow);
+    `AND(sltOpp, sltOppTemp, operandA[31]);
+
     `AND(sltSameSign, tempresult[31], notOverflow);
     `OR(sltResult[0], sltSameSign, sltOpp);
+
+    genvar j;
+    generate
+        for (j=1; j < 32; j=j+1) begin : ANDGenerator
+            `AND(sltResult[j], 0, 0);
+        end
+    endgenerate
 
     thirtyTwoMux mux32(result, tempresult, sltResult, sltChoice);
 
