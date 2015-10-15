@@ -60,6 +60,7 @@ module ALU (
     wire sltSameSign, sltOppTemp, sltOpp, notOverflow, sltChoice;
     ALUcontrolLUT aluControlLUT(deviceChoice,bInv,command, sltChoice);
 
+    // connect 32 ALU bit slices
     genvar i;
     generate
         for (i=0; i < 32; i=i+1) begin : ALUbit
@@ -76,9 +77,13 @@ module ALU (
             end
         end
     endgenerate
+
+    // Carryout flag logic
     `NOT(notCommand2, command[2]);
     `NOT(notCommand1, command[1]);
     `ANDtri (carryout, carry[32], notCommand1, notCommand2);
+    
+    // Overflow flag logic
     ourXOR ourxor(tempOverflow, carry[31], carryout);
     `ANDtri (overflow, tempOverflow, notCommand1, notCommand2);
 
@@ -90,6 +95,7 @@ module ALU (
     `AND(sltSameSign, tempresult[31], notOverflow);
     `OR(sltResult[0], sltSameSign, sltOpp);
 
+    // 0s for 31 most significant bits for SLT result
     genvar j;
     generate
         for (j=1; j < 32; j=j+1) begin : ANDGenerator
@@ -97,16 +103,18 @@ module ALU (
         end
     endgenerate
 
+    // Mux the result of SLT and result of the ALU bit slices to choose which result to output
     thirtyTwoMux mux32(result, tempresult, sltResult, sltChoice);
 
     
-
+    // ZERO flag logic
     `OR32(tempZero, result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],result[11],result[12],result[13],result[14],result[15],result[16],result[17],result[18],result[19],result[20],result[21],result[22],result[23],result[24],result[25],result[26],result[27],result[28],result[29],result[30],result[31]);
     `NOT(zero, tempZero);
 
 
 endmodule
 
+// Bit-slice of ALU
 module structuralALU(
         output out,
         output carryout,
@@ -145,6 +153,7 @@ module structuralALU(
 
 endmodule
 
+// XOR made of basic gates
 module ourXOR(output out, input a, input b);
 	wire AnorB, AorB, AnandB, notXOR;
 	
@@ -155,6 +164,7 @@ module ourXOR(output out, input a, input b);
     `NOT(out, notXOR);
 endmodule
 
+// Two to one mux for choosing B or Binv (important for subtraction)
 module twoToOneMux(output out, input address, input in0, input in1);
 	wire nAddr, in0nandnAddr, in1nandAddr;
 	
@@ -164,6 +174,7 @@ module twoToOneMux(output out, input address, input in0, input in1);
 	`NAND(out, in0nandnAddr, in1nandAddr);
 endmodule 
 
+// Mux for choosing output of ALU bit slice
 module eightToOneMux(input in0, input in1, input in2, input in3, input in4,input in5, input in6,input in7, input[2:0] addr, output out );
     wire temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, naddr0, naddr1, naddr2;
     `NOT(naddr0, addr[0]);
@@ -183,6 +194,7 @@ module eightToOneMux(input in0, input in1, input in2, input in3, input in4,input
     `bOR(out, temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7);
 endmodule
 
+// Mux two 32-bit wires to choose if final output is result of SLT or result of ALU bits
 module thirtyTwoMux(output [31:0]out, input [31:0]in1, input [31:0]in2, input selector);
     wire notSelector;
     wire [31:0]andIn1;
@@ -200,6 +212,7 @@ module thirtyTwoMux(output [31:0]out, input [31:0]in1, input [31:0]in2, input se
 
 endmodule
 
+// test bench
 module testALU;
     wire [31:0]out;
     wire overflow, cout, zero;
@@ -212,132 +225,127 @@ module testALU;
     initial begin
         $dumpfile("alu.vcd");
         $dumpvars(0, testALU);
-        control=3'b001; a=0; b=0; #10000
+
+
+        $display("Command                  A                             B                  |                  R               | OFL CO     ZERO |              Exp R               Exp OFL Exp CO Exp Zero");
+
+        $display("                                                               ");
+        $display("                            ADD Tests                          ");
+
+        control=3'b000; a=32; b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero); 
+	control=3'b000; a=2; b=3; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000101   0    0     0", control, a, b, out, overflow, cout, zero);  
+	control=3'b000; a=-2147483648; b=2147483648; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero); 
+	control=3'b000; a=-8; b=2; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero); 
+	control=3'b000; a=8; b=-2; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000110   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b000; a=-8; b=-9; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b000; a=-8; b=2; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b000; a=2147483648; b=2147483648; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero);
+        control=3'b000; a=-1; b=-1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b000; a=1; b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000010   0    0     0", control, a, b, out, overflow, cout, zero); 
+
+
+        $display("                                                               ");
+        $display("                            SUB Tests                          ");
+        control=3'b001; a=1; b=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000001   0    1     0", control, a, b, out, overflow, cout, zero);
+        control=3'b001; a=1; b=32; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111100001   0    0     0", control, a, b, out, overflow, cout, zero);
+	control=3'b001; a=1; b=-32; #10000
         $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero);
-        control=3'b000; a=1;b=-1; #10000
+	control=3'b001; a=-1; b=32; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111011111   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b001; a=-1; b=-32; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000011111   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b001; a=-8; b=9; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
+	control=3'b001; a=-8; b=-2; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b001; a=2147483648; b=-2147483648; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   0    1     1", control, a, b, out, overflow, cout, zero);
+        control=3'b001; a=-1; b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     0", control, a, b, out, overflow, cout, zero);
+
+        $display("                                                               ");
+        $display("                            XOR Tests                          ");
+        control=3'b010; b=0; a=0; #10000
         $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
-        control=3'b010; a=-2;b=-1; #10000
+        control=3'b010; b=1; a=1; #10000
         $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        control=3'b010; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b010; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
 
- //        $display("Command                  A                             B                  |                  R               | OFL CO     ZERO |              Exp R               Exp OFL Exp CO Exp Zero");
-
- //        $display("                                                               ");
- //        $display("                            ADD Tests                          ");
-
- //        control=3'b000; a=32; b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero); 
-	// control=3'b000; a=2; b=3; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000101   0    0     0", control, a, b, out, overflow, cout, zero);  
-	// control=3'b000; a=-2147483648; b=2147483648; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero); 
-	// control=3'b000; a=-8; b=2; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero); 
-	// control=3'b000; a=8; b=-2; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000110   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b000; a=-8; b=-9; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b000; a=-8; b=2; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b000; a=2147483648; b=2147483648; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b000; a=-1; b=-1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b000; a=1; b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000010   0    0     0", control, a, b, out, overflow, cout, zero); 
-
-
- //        $display("                                                               ");
- //        $display("                            SUB Tests                          ");
- //        control=3'b001; a=1; b=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000001   0    1     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b001; a=1; b=32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111100001   0    0     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b001; a=1; b=-32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b001; a=-1; b=32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111011111   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b001; a=-1; b=-32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000011111   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b001; a=-8; b=9; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b001; a=-8; b=-2; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b001; a=2147483648; b=-2147483648; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   0    1     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b001; a=-1; b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     0", control, a, b, out, overflow, cout, zero);
-
- //        $display("                                                               ");
- //        $display("                            XOR Tests                          ");
- //        control=3'b010; b=0; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b010; b=1; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b010; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b010; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
-
- //        $display("                                                               ");
- //        $display("                            SLT Tests                          ");
-	// control=3'b011; a=32;b=-1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=-32;b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=32;b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=1;b=32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=-32;b=-1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=-1;b=-32; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
-	// control=3'b011; a=1;b=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display("                                                               ");
+        $display("                            SLT Tests                          ");
+	control=3'b011; a=32;b=-1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=-32;b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=32;b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=1;b=32; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=-32;b=-1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=-1;b=-32; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+	control=3'b011; a=1;b=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
 	
- //        $display("                                                               ");
- //        $display("                            AND Tests                          ");
- //        control=3'b100; b=0; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b100; b=1; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b100; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b100; b=1; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display("                                                               ");
+        $display("                            AND Tests                          ");
+        control=3'b100; b=0; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        control=3'b100; b=1; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b100; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        control=3'b100; b=1; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
 
- //        $display("                                                               ");
- //        $display("                           NAND Tests                          ");
- //        control=3'b101; b=0; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b101; b=1; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b101; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b101; b=1; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
+        $display("                                                               ");
+        $display("                           NAND Tests                          ");
+        control=3'b101; b=0; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b101; b=1; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b101; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b101; b=1; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
 
- //        $display("                                                               ");
- //        $display("                            NOR Tests                          ");
- //        control=3'b110; b=0; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b110; b=1; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b110; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b110; b=1; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
+        $display("                                                               ");
+        $display("                            NOR Tests                          ");
+        control=3'b110; b=0; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b110; b=1; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b110; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b110; b=1; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  all 1, last 0   0    0     0", control, a, b, out, overflow, cout, zero);
 
- //        $display("                                                               ");
- //        $display("                             OR Tests                          ");
- //        control=3'b111; b=0; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
- //        control=3'b111; b=1; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b111; b=1; a=0; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
- //        control=3'b111; b=0; a=1; #10000
- //        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+        $display("                                                               ");
+        $display("                             OR Tests                          ");
+        control=3'b111; b=0; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        control=3'b111; b=1; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b111; b=1; a=0; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
+        control=3'b111; b=0; a=1; #10000
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
 
     end
 endmodule
