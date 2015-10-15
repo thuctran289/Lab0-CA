@@ -30,13 +30,13 @@ SLT is accomplished via utilizing the subtraction function within the bitslice A
 Overall, our test results were very helpful to us in showing bugs in our code. Furthermore, they were also helpful for reminding us that we had to implement certain functions and flags such as the ZERO flag.
 
 ### Adder
-For the adder we chose test cases that have input of two positive numbers, one positive and one negative number, and two negative numbers. On the output side, we covered the cases of no overflow or carryout, overflow but no carryout, carryout but no overflow, and both overflow and carryout.
+For the adder we chose test cases that have input of two positive numbers, one positive and one negative number, and two negative numbers. On the output side, we covered the cases of no overflow or carryout, overflow but no carryout, carryout but no overflow, and both overflow and carryout. We had no issues verifying.
 
 ### Subtractor
-For the subtractor we chose test cases that have input of two positive numbers, one positive one negative, and two negative numbers. On the output side, we covered the cases of no overflow or carryout, overflow but no carryout, carryout but no overflow, and both overflow and carryout.
+For the subtractor we chose test cases that have input of two positive numbers, one positive one negative, and two negative numbers. On the output side, we covered the cases of no overflow or carryout, overflow but no carryout, carryout but no overflow, and both overflow and carryout. We had no issues verifying.
 
 ### XOR
-For the XOR testbench, we covered all four test cases for one bit and multiple bits cases. Through these test cases, we had discovered that our AND and XOR was being multiplexed to the same line, and hence, required fixing.
+For the XOR testbench, we covered all four test cases for one bit and multiple bits cases. Through these test cases, we had discovered that our AND and XOR was being multiplexed to the same line, and hence, required fixing because our XOR result was the ADD result.
 
 ### SLT
 For the SLT cases we tried to compare positive number to positive number, positive to negative, negative to positive, negative to negative and two same numbers. This testbench showed us an issue that we had with competing gates driving a wire. As a result, we had to adjust our strategy of how we set wires to a fixed state.
@@ -122,6 +122,9 @@ Command                  A                             B                  |     
 
 ## Timing Analysis
 
+The worst case propagation delay of the entire ALU is when calculating the result of the zero flag when doing an SLT calculation. We found that this delay is 2640 time units.  
+
+For each different operation, finding the result of the zero flag is always the slowest. For both addition and subtraction, the worst case timing takes 2560 units. For XOR, the worst case timing is 590 units.
 
 ## Work Plan Reflection
 Generally speaking, we followed our work plan well for the majority part of the lab. In aggregate, we had matched our planned time quite well, spending about 10 hours, as per our work plan. The actual distribution of the hours differed due to a change of direction regarding speed vs. area decisions and unexpected delays in implementing the SLT component and typo correction. The typo debugging was the largest time expenditure. In the future, we plan to implement a more rigorous standard for labeling and preparing a visual representation of our circuit in order to minimize time spent chasing typos. Furthermore, we will also allocate more time for debugging and other unforeseen issues.,
