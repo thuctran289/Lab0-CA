@@ -221,21 +221,21 @@ module testALU;
         $display("                            ADD Tests                          ");
 
         control=3'b000; a=32; b=1; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     1", control, a, b, out, overflow, cout, zero); 
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero); 
 	control=3'b000; a=2; b=3; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000101   0    0     1", control, a, b, out, overflow, cout, zero);  
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000101   0    0     0", control, a, b, out, overflow, cout, zero);  
 	control=3'b000; a=-2147483648; b=2147483648; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   0    0     1", control, a, b, out, overflow, cout, zero); 
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero); 
 	control=3'b000; a=-8; b=2; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     1", control, a, b, out, overflow, cout, zero); 
 	control=3'b000; a=8; b=-2; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000110   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000110   0    1     1", control, a, b, out, overflow, cout, zero);
 	control=3'b000; a=-8; b=-9; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   1    1     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
 	control=3'b000; a=-8; b=2; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   1    1     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     1", control, a, b, out, overflow, cout, zero);
         control=3'b000; a=2147483648; b=2147483648; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  10000000000000000000000000000000   1    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero);
         control=3'b000; a=-1; b=-1; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     1", control, a, b, out, overflow, cout, zero);
 
@@ -243,21 +243,21 @@ module testALU;
         $display("                                                               ");
         $display("                            SUB Tests                          ");
         control=3'b001; a=1; b=0; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000001   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000001   0    1     0", control, a, b, out, overflow, cout, zero);
         control=3'b001; a=1; b=32; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111100001   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111100001   0    0     0", control, a, b, out, overflow, cout, zero);
 	control=3'b001; a=1; b=-32; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000100001   0    0     0", control, a, b, out, overflow, cout, zero);
 	control=3'b001; a=-1; b=32; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111011111   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111011111   0    1     0", control, a, b, out, overflow, cout, zero);
 	control=3'b001; a=-1; b=-32; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000011111   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000011111   0    1     0", control, a, b, out, overflow, cout, zero);
 	control=3'b001; a=-8; b=9; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   1    1     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111101111   0    1     0", control, a, b, out, overflow, cout, zero);
 	control=3'b001; a=-8; b=-2; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   1    1     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     1", control, a, b, out, overflow, cout, zero);
         control=3'b001; a=2147483648; b=-2147483648; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  10000000000000000000000000000000   1    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  10000000000000000000000000000000   0    1     1", control, a, b, out, overflow, cout, zero);
         control=3'b001; a=-1; b=1; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     1", control, a, b, out, overflow, cout, zero);
 
