@@ -130,5 +130,5 @@ For each different operation, finding the result of the zero flag is always the 
 Generally speaking, we followed our work plan well for the majority part of the lab. In aggregate, we had matched our planned time quite well, spending about 10 hours, as per our work plan. The actual distribution of the hours differed due to a change of direction regarding speed vs. area decisions and unexpected delays in implementing the SLT component and typo correction. The typo debugging was the largest time expenditure. In the future, we plan to implement a more rigorous standard for labeling and preparing a visual representation of our circuit in order to minimize time spent chasing typos. Furthermore, we will also allocate more time for debugging and other unforeseen issues.
 
 
-###s Sincerely,
+### Sincerely,
 ### The CPU team
