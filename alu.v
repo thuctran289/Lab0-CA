@@ -65,7 +65,7 @@ module ALU (
         for (i=0; i < 32; i=i+1) begin : ALUbit
             if (i == 0)
                 begin
-                    assign carry[i] = bInv;
+                    `OR(carry[i], 0, bInv);
                     structuralALU strucALU(tempresult[i], carry[i+1], operandA[i],operandB[i], carry[i], bInv, deviceChoice); 
             end else if (i == 31) 
                 begin
