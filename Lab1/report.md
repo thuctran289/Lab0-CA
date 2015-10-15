@@ -124,7 +124,7 @@ Command                  A                             B                  |     
 
 The worst case propagation delay of the entire ALU is when calculating the result of the zero flag when doing an SLT calculation. We found that this delay is 2640 time units.  
 
-For each different operation, finding the result of the zero flag is always the slowest. For both addition and subtraction, the worst case timing takes 2560 units. For XOR, the worst case timing is 590 units.
+For each different operation, finding the result of the zero flag is always the slowest. For both addition and subtraction, the worst case timing takes 2560 units. For XOR, the worst case timing is 590 units. For the AND, the worst case timing is 610 units. For NAND, the worst case timing is 540 units. For NOR, the worst case timing is 540 units. For OR, the worst case timing is 570 units.
 
 ## Work Plan Reflection
 Generally speaking, we followed our work plan well for the majority part of the lab. In aggregate, we had matched our planned time quite well, spending about 10 hours, as per our work plan. The actual distribution of the hours differed due to a change of direction regarding speed vs. area decisions and unexpected delays in implementing the SLT component and typo correction. The typo debugging was the largest time expenditure. In the future, we plan to implement a more rigorous standard for labeling and preparing a visual representation of our circuit in order to minimize time spent chasing typos. Furthermore, we will also allocate more time for debugging and other unforeseen issues.
