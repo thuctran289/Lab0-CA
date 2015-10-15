@@ -101,7 +101,7 @@ module ALU (
 
     
 
-    `OR32(tempZero, result);
+    `OR32(tempZero, result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],result[11],result[12],result[13],result[14],result[15],result[16],result[17],result[18],result[19],result[20],result[21],result[22],result[23],result[24],result[25],result[26],result[27],result[28],result[29],result[30],result[31]);
     `NOT(zero, tempZero);
 
 
@@ -141,7 +141,7 @@ module structuralALU(
     `NOR(aXORb_AND_Carryin__nor__aAndb, aXORb_AND_carryin, aANDb);
     `NOT(carryout,  aXORb_AND_Carryin__nor__aAndb);
     
-    eightToOneMux eightonemux(aADDb, aXORb, 0, aANDb,aNANDb ,aNORb,aORb ,0, muxDevice, out );
+    eightToOneMux eightonemux(aADDb,aXORb,1'b0,  aANDb,aNANDb ,aNORb,aORb ,aANDb, muxDevice, out );
 
 endmodule
 
@@ -165,22 +165,20 @@ module twoToOneMux(output out, input address, input in0, input in1);
 endmodule 
 
 module eightToOneMux(input in0, input in1, input in2, input in3, input in4,input in5, input in6,input in7, input[2:0] addr, output out );
-    wire temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, naddr0, naddr1, naddr2, nnaddr0, nnaddr1, nnaddr2;
+    wire temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, naddr0, naddr1, naddr2;
     `NOT(naddr0, addr[0]);
     `NOT(naddr1, addr[1]);
     `NOT(naddr2, addr[2]);
-    `NOT(nnaddr0, naddr0);
-    `NOT(nnaddr1, naddr1);
-    `NOT(nnaddr2, naddr2);
+
 
     `bAND(temp0, naddr0, naddr1, naddr2, in0);
-    `bAND(temp1, nnaddr0, naddr1, naddr2, in1);
-    `bAND(temp2, naddr0, nnaddr1, naddr2, in2);
-    `bAND(temp3, nnaddr0, naddr1, naddr2, in3);
-    `bAND(temp4, naddr0, naddr1, nnaddr2, in4);
-    `bAND(temp5, nnaddr0, naddr1, nnaddr2, in5);
-    `bAND(temp6, naddr0, nnaddr1, nnaddr2, in6);
-    `bAND(temp7, nnaddr0, nnaddr1, nnaddr2, in7);
+    `bAND(temp1, addr[0], naddr1, naddr2, in1);
+    `bAND(temp2, naddr0, addr[1], naddr2, in2);
+    `bAND(temp3, addr[0], addr[1], naddr2, in3);
+    `bAND(temp4, naddr0, naddr1, addr[2], in4);
+    `bAND(temp5, addr[0], naddr1, addr[2], in5);
+    `bAND(temp6, naddr0, addr[1], addr[2], in6);
+    `bAND(temp7, addr[0], addr[1], addr[2], in7);
 
     `bOR(out, temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7);
 endmodule
@@ -238,6 +236,8 @@ module testALU;
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   1    1     1", control, a, b, out, overflow, cout, zero);
         control=3'b000; a=-1; b=-1; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     1", control, a, b, out, overflow, cout, zero);
+	control=3'b000; a=1; b=1; #10000
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000010   0    0     0", control, a, b, out, overflow, cout, zero); 
 
 
         $display("                                                               ");
@@ -257,7 +257,7 @@ module testALU;
 	control=3'b001; a=-8; b=-2; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111010   0    0     1", control, a, b, out, overflow, cout, zero);
         control=3'b001; a=2147483648; b=-2147483648; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  10000000000000000000000000000000   0    1     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  00000000000000000000000000000000   0    1     1", control, a, b, out, overflow, cout, zero);
         control=3'b001; a=-1; b=1; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  11111111111111111111111111111110   0    1     1", control, a, b, out, overflow, cout, zero);
 
@@ -266,11 +266,11 @@ module testALU;
         control=3'b010; b=0; a=0; #10000
         $display(" %b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
         control=3'b010; b=1; a=1; #10000
-        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  0   0    0     0", control, a, b, out, overflow, cout, zero);
         control=3'b010; b=0; a=1; #10000
-        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display(" %b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
         control=3'b010; b=0; a=1; #10000
-        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     1", control, a, b, out, overflow, cout, zero);
+        $display("%b   %b  %b  | %b |  %b   %b    %b     |  1   0    0     0", control, a, b, out, overflow, cout, zero);
 
         $display("                                                               ");
         $display("                            SLT Tests                          ");
