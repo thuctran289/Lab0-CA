@@ -19,7 +19,8 @@ Shift Register                                                                  
 		Serial In/ Parallel Out (?)
 Midpoint Checkin					 	  											11/1 - 11/2             3.5 hour
 	Top level module and load it onto FPGA																	1 hour
-	design a test sequence that demonstrates successful operation of this portion of the lab. Short written description of what the test engineer is to do, and what the state of the LEDS should be at each step								  2 hour
+	design a test sequence that demonstrates successful operation of this portion of the lab. Short written description of what the test engineer is to do, and what the state of the LEDS should be at each step
+																											  2 hour
 	Show a NINJA of the test being executed and/or submit a ~60sec video      								.5 hour
 SPI Memory                                                                              11/3-11/4            2 hours
 	128 bytes
