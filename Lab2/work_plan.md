@@ -5,15 +5,15 @@ lab due: Mon. Nov 9 5PM
 
 ## Deliverables
 ### Input Conditioning: 10/28 - 10/29, 2 hours
-1.5 hour: Input conditioner
+1.5 hour: Input conditioner - DONE IN 1.1 HOUR :)
 - Input Synchronization
 - Input Debouncing
 - Edge Detection
 
-20 mins: Test bench
+20 mins: Test bench -
 - demonstrates 3 functions
 
-10 mins: Test script
+10 mins: Test script - 30 MINUTES :) (problem with iverilog syntax)
 - execute test bench and generate wave forms
 
 ### Shift Register: 10/31 - 11/1, 2.5 hours
