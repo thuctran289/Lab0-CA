@@ -20,9 +20,34 @@ module testshiftregister();
     		           .serialDataIn(serialDataIn), 
     		           .parallelDataOut(parallelDataOut), 
     		           .serialDataOut(serialDataOut));
+
+    initial clk=0;
+    always #10 clk=!clk;    // 50MHz Clock
     
+    initial peripheralClkEdge=0;
+    always #20 peripheralClkEdge=!peripheralClkEdge;    // 25MHz Clock
+    
+    initial serialDataIn = 0;
+
     initial begin
-    	// Your Test Code
+
+    $dumpfile("shiftregister.t.vcd");
+    $dumpvars(0, testshiftregister);
+    $display("hello world");
+    
+    parallelDataIn = 255;
+    serialDataIn = 0;
+    #20
+    #10
+    parallelLoad = 1;
+    #40;
+    parallelLoad = 0;
+    #200
+    serialDataIn = 1;
+    #100
+    serialDataIn = 0;
+    #500 $finish ;
+    
     end
 
 endmodule
