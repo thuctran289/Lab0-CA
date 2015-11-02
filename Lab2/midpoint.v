@@ -5,7 +5,7 @@ module midpoint
     input  [1:0] sw,
     input  [3:0] btn,
     output [3:0] led
-    _);
+    );
 
 	wire [2:0] conditioned;
 	wire [2:0] positiveedge;
