@@ -14,8 +14,8 @@ output reg  positiveedge,   // 1 clk pulse at rising edge of conditioned
 output reg  negativeedge    // 1 clk pulse at falling edge of conditioned
 );
 
-    parameter counterwidth = 4; // Counter size, in bits, >= log2(waittime)
-    parameter waittime = 10;     // Debounce delay, in clock cycles
+    parameter counterwidth = 3; // Counter size, in bits, >= log2(waittime)
+    parameter waittime = 3;     // Debounce delay, in clock cycles
     
     reg[counterwidth-1:0] counter = 0;
     reg synchronizer0 = 0;
@@ -36,9 +36,8 @@ output reg  negativeedge    // 1 clk pulse at falling edge of conditioned
                 positiveedge <= !conditioned;
                 negativeedge <= conditioned;
             end
-            else 
-                counter <= counter+1;
-                
+            else
+                counter <= counter+1;  
         end
         synchronizer0 <= noisysignal;
         synchronizer1 <= synchronizer0;
