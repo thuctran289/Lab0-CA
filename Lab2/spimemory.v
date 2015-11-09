@@ -20,7 +20,7 @@ module spiMemory
 	wire SR_WE, MISO_BUFF, DM_WE, ADDR_WE;
 	wire [7:0] dout, shiftRegOutP,dataMemOut;
 	wire shiftRegOutS;
-	wire [6:0] address;
+	wire [7:0] address;
 	
 
 	inputconditioner MOSI(clk, mosi_pin, conditioned[0], positiveedge[0], negativeedge[0]);
@@ -29,17 +29,32 @@ module spiMemory
 
 	shiftregister sr(clk, positiveedge[1], SR_WE, dout, conditioned[0], shiftRegOutP, shiftRegOutS);
 	
-	datamemory dm(clk, dataMemOut, address, DM_WE, shiftRegOutP);
+	addresslatch al(clk, shiftRegOutP, ADDR_WE, address)
+
+	datamemory dm(clk, dataMemOut, address[7:1], DM_WE, shiftRegOutP);
 
 
 endmodule
    
-module dl(q,d,clk);
-	output q;
-	input d,clk;
-	reg q;
+// module dl(q,d,clk);
+// 	output q;
+// 	input d,clk;
+// 	reg q;
+// 	always @(clk==1)
+// 		q=d;
+// endmodule
+
+module addresslatch
+(
+	input clk,
+	input [7:0] d,
+	input addr_we,
+	output reg [7:0] q
+);
+
 	always @(clk==1)
-		q=d;
+		if (addr_we==1)
+			q=d;
 endmodule
 
 
