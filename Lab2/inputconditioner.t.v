@@ -24,8 +24,10 @@ module testConditioner();
     initial begin
         $dumpfile("inputconditioner.t.vcd");
         $dumpvars(0, testConditioner);
+        $write("%c[35m",27);
         $display("Input conditioner test bench");
-        $display("============================");
+        $display("----------------------------");
+        $write("%c[0m",27);
         // TEST BENCH IS FOR WAITTIME = 3
         pin = 0;
         #300
