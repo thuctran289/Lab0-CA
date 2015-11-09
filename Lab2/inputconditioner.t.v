@@ -16,18 +16,6 @@ module testConditioner();
 			 .positiveedge(rising),
 			 .negativeedge(falling));
 
-    // inputconditionertestbench tester
-    // (
-    //     .begintest(begintest),
-    //     .endtest(endtest),
-    //     .dutpassed(dutpassed),
-    //     .clk(clk),
-    //     .noisysignal(pin),
-    //     .conditioned(conditioned),
-    //     .positiveedge(rising),
-    //     .negativeedge(falling)
-    // );
-
     // Generate clock (50MHz)
     integer i;
     initial clk=0;
@@ -36,7 +24,6 @@ module testConditioner();
     initial begin
         $dumpfile("inputconditioner.t.vcd");
         $dumpvars(0, testConditioner);
-        // $display("hello world");
         pin = 0;
         #300
         pin = 1;
@@ -78,18 +65,3 @@ module testConditioner();
     // Synchronize, Clean, Preprocess (edge finding)
     end
 endmodule
-
-// module inputconditionertestbench
-// (
-//     input begintest,
-//     output reg endtest,
-//     output reg dutpassed,
-//     output reg clk,
-//     output reg noisysignal,
-//     input conditioned,
-//     input positiveedge,
-//     input negativeedge
-// );
-
-
-// endmodule
