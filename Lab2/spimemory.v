@@ -28,14 +28,32 @@ module spiMemory
 	inputconditioner CS(clk, cs_pin, conditioned[2], positiveedge[2], negativeedge[2]);
 
 	shiftregister sr(clk, positiveedge[1], SR_WE, dout, conditioned[0], shiftRegOutP, shiftRegOutS);
-	
-	addresslatch al(clk, shiftRegOutP, ADDR_WE, address);
+	if (fault_pin == 0)
+		addresslatch al(clk, shiftRegOutP, ADDR_WE, address);
+	else
+		addresslatch_breakable(clk, shiftRegOutP, ADDR_WE, address, fault_pin);
 
 	datamemory dm(clk, dataMemOut, address[7:1], DM_WE, shiftRegOutP);
 
 
 endmodule
-   
+
+module addresslatch_breakable
+(
+	input clk,
+	input [7:0] d,
+	input addr_we,
+	output reg [7:0] q,
+	input fault_pin
+);
+
+	always @(clk==1)
+		if(fault_pin==1)
+			q=0;
+		else if (addr_we==1)
+			q=d;
+endmodule
+
 // module dl(q,d,clk);
 // 	output q;
 // 	input d,clk;

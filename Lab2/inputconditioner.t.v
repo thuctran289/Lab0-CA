@@ -25,6 +25,7 @@ module testConditioner();
         $dumpfile("inputconditioner.t.vcd");
         $dumpvars(0, testConditioner);
         $display("Input conditioner test bench");
+        // TEST BENCH IS FOR WAITTIME = 3
         pin = 0;
         #300
         pin = 1;
@@ -44,15 +45,15 @@ module testConditioner();
         end
         #300
         pin = 0;
-        #300 //70 is longest time for glitch
+        #300
         pin = 1;
         #250
         pin = 0;
         #500
         pin = 1;
-        #20 // 220 is longest for 10 waittime
+        #200 // 220 is longest for 10 waittime, 70 is longest time for glitch for 3 waittime
         pin = 0;
-        #20
+        #500
         pin = 1;
         #20
         pin = 0;
