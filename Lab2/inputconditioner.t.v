@@ -24,6 +24,7 @@ module testConditioner();
     initial begin
         $dumpfile("inputconditioner.t.vcd");
         $dumpvars(0, testConditioner);
+        $display("Input conditioner test bench");
         pin = 0;
         #300
         pin = 1;

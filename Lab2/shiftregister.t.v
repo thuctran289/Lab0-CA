@@ -26,7 +26,8 @@ module testshiftregister();
     always #10 clk=!clk;    // 50MHz Clock
 
     initial begin
-
+        $dumpfile("shiftregister.t.vcd");
+        $dumpvars(0, testshiftregister);
       $display("Test I Parallel in, serial out.");
       $display("parallelLoad | parallelDataIn | serialDataOut | Expected Out");
       parallelLoad = 1; parallelDataIn = 8'b10011010; #20  
