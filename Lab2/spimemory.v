@@ -29,7 +29,7 @@ module spiMemory
 
 	shiftregister sr(clk, positiveedge[1], SR_WE, dout, conditioned[0], shiftRegOutP, shiftRegOutS);
 	
-	addresslatch al(clk, shiftRegOutP, ADDR_WE, address)
+	addresslatch al(clk, shiftRegOutP, ADDR_WE, address);
 
 	datamemory dm(clk, dataMemOut, address[7:1], DM_WE, shiftRegOutP);
 
