@@ -20,35 +20,26 @@ module testshiftregister();
     		           .serialDataIn(serialDataIn), 
     		           .parallelDataOut(parallelDataOut), 
     		           .serialDataOut(serialDataOut));
+  
 
     initial clk=0;
     always #10 clk=!clk;    // 50MHz Clock
-    
-    initial peripheralClkEdge=0;
-    always #20 peripheralClkEdge=!peripheralClkEdge;    // 25MHz Clock
-    
-    initial serialDataIn = 0;
 
     initial begin
 
-    $dumpfile("shiftregister.t.vcd");
-    $dumpvars(0, testshiftregister);
-    $display("hello world");
-    
-    parallelDataIn = 255;
-    serialDataIn = 0;
-    #20
-    #10
-    parallelLoad = 1;
-    #40;
-    parallelLoad = 0;
-    #200
-    serialDataIn = 1;
-    #100
-    serialDataIn = 0;
-    #500 $finish ;
-    
+      $display("Test I Parallel in, serial out.");
+      $display("parallelLoad | parallelDataIn | serialDataOut | Expected Out");
+      parallelLoad = 1; parallelDataIn = 8'b10011010; #20  
+      $display("%b            | %b       | %b             | 1", parallelLoad, parallelDataIn, serialDataOut);
+      $display("-----------------------------------------------");
+      parallelLoad = 0;
+      $display("Test II Serial in, parallel out.");
+      $display("peripheralClkEdge | serialDataIn | parallelDataOut | Expected Out");
+      peripheralClkEdge = 1; serialDataIn = 1; #20
+      $display("%b                 | %b            | %b        | 00110101", peripheralClkEdge, serialDataIn, parallelDataOut);
+      $display("-----------------------------------------------");
+      $finish;
     end
+  
 
 endmodule
-
