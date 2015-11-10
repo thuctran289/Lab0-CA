@@ -17,6 +17,8 @@ iverilog -o shiftregister.t.vvp shiftregister.t.v shiftregister.v
 vvp shiftregister.t.vvp
 
 echo "${RED}=============================${NC}"
+iverilog -o spimemory.t.vvp spimemory.t.v spimemory.v datamemory.v shiftregister.v inputconditioner.v
+vvp spimemory.t.vvp 
 
 echo "${BLUE}"
 echo "To view waveforms for the given parts,\nopen the following in Scansion (on a mac!!!):${NC}"

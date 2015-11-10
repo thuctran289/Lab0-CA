@@ -37,8 +37,6 @@ module spiMemory
 
 	tristatebuffer tsb(MISO_BUFF, q, miso_pin);
 
-
-
 	datamemory dm(clk, dataMemOut, address[6:0], DM_WE, shiftRegOutP);
 endmodule
 
@@ -92,7 +90,8 @@ module finiteStateMachine(
 );
 
 	parameter SIZE = 3;  
-	parameter GET = 3'b000, GOT = 3'b001, READ1 = 3'b010, READ2 = 3'b011, READ3 = 3'b100, WRITE1 = 3'b101, WRITE2 = 3'b110, DONE = 3'b111;
+	parameter GET = 3'b000, GOT = 3'b001, READ1 = 3'b010, 
+	READ2 = 3'b011, READ3 = 3'b100, WRITE1 = 3'b101, WRITE2 = 3'b110, DONE = 3'b111;
 	//Binary encoding for phases
 	reg [7:0] counter; //initiate counter
 	// initial counter  = 0;

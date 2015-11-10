@@ -3,7 +3,7 @@
 
 ### Circuit Diagram
 
-INSERT PICTURE OMG
+![Input conditioner](inputconditioner.png)
 
 ### Max length of input glitch
 
@@ -36,7 +36,6 @@ In order to test our SPI Memory, we decided to write and read from every address
 
 As you can see from the above image, we injected the fault that the data output of datamemory would always be 0, thus meaning that the parallel in for the shift register should always be 0. This means that no matter what address we attempt to write to, we will actually always be writing to address 0.
 
-### Pattern
 
 ## Work Plan Reflection
 
