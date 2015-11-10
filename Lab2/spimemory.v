@@ -21,15 +21,51 @@ module spiMemory
 	wire [7:0] dout, shiftRegOutP,dataMemOut;
 	wire shiftRegOutS;
 	wire [7:0] address;
+	wire q;
 	
 	inputconditioner MOSI(clk, mosi_pin, conditioned[0], positiveedge[0], negativeedge[0]);
 	inputconditioner SCLK(clk, sclk_pin, conditioned[1], positiveedge[1], negativeedge[1]);
 	inputconditioner CS(clk, cs_pin, conditioned[2], positiveedge[2], negativeedge[2]);
-	shiftregister sr(clk, positiveedge[1], SR_WE, dout, conditioned[0], shiftRegOutP, shiftRegOutS);
+
+	shiftregister sr(clk, positiveedge[1], SR_WE, dataMemOut, conditioned[0], shiftRegOutP, shiftRegOutS);
+	
 	addresslatch al(clk, shiftRegOutP, ADDR_WE, address);
-	datamemory_breakable dm(clk, dataMemOut, address[7:1], DM_WE, shiftRegOutP, fault_pin);
+	
+	finiteStateMachine fsm(sclk_pin, cs_pin, shiftRegOutP[0], MISO_BUFF, DM_WE, ADDR_WE, SR_WE);
+
+	dflipflop dff(clk, shiftRegOutS, negativeedge[1], q);
+
+	tristatebuffer tsb(MISO_BUFF, q, miso_pin);
+
+
+
+	datamemory dm(clk, dataMemOut, address[6:0], DM_WE, shiftRegOutP);
 endmodule
 
+
+module tristatebuffer
+(
+	input MISO_BUFF,
+	input q,
+	output miso_pin
+);
+	assign miso_pin = MISO_BUFF?q: 'bz;
+
+endmodule
+
+module dflipflop
+(
+	input clk,
+	input d,
+	input addr_we,
+	output reg q
+);
+
+	always @(posedge clk) begin  //update on every clock edge
+		if (addr_we==1)
+			q<=d;
+	end
+endmodule
 
 module addresslatch
 //d latch module 
@@ -42,24 +78,24 @@ module addresslatch
 
 	always @(clk==1)   //update on every clock edge
 		if (addr_we==1)
-			q=d;
+			q<=d;
 endmodule
 
 module finiteStateMachine(
-	   input sclk,   //clock
-	   input CS,     //reset signal
-           input shiftOutS,  //shift register output
-           output reg MISO_BUFF,  //Master-in slave-out
-           output reg DM_WE,  //Data memory write-enable 
-           output reg ADDR_WE,  //Write-enable for address latch
-           output reg SR_WE  //Parallel load
+	   	input sclk,   //clock
+	   	input CS,     //reset signal
+        input shiftOutS,  //shift register output
+        output reg MISO_BUFF,  //Master-in slave-out
+        output reg DM_WE,  //Data memory write-enable 
+        output reg ADDR_WE,  //Write-enable for address latch
+        output reg SR_WE  //Parallel load
 );
 
 	parameter SIZE = 3;  
 	parameter GET = 3'b000, GOT = 3'b001, READ1 = 3'b010, READ2 = 3'b011, READ3 = 3'b100, WRITE1 = 3'b101, WRITE2 = 3'b110, DONE = 3'b111;
 	//Binary encoding for phases
 	reg [7:0] counter; //initiate counter
-
+	// initial counter  = 0;
 	reg [SIZE-1:0] state;  //Seq part of FSM
 	reg [SIZE-1:0] next_state;  //Combo part for FSM
 
@@ -67,88 +103,100 @@ module finiteStateMachine(
 
 	if (CS ==1 ) begin  //Reset counter when cs is 1
 		state <= GET;
-		assign counter = 0;
+		counter <= 0;
 
-	end else
+	end else begin
+
 		case(state)
 			GET: begin
 				if (counter != 128) begin  //count 8 bits
-					assign counter = counter << 1;
+					if (counter==0)
+						counter <= 1;
+					else begin
+						counter <= counter << 1;
+					end
 				end else begin
 					state <= GOT; //move to next phase after getting the 8 bits
 				end
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 			GOT: begin //read the LSB bit to determine whether to read or write
 				if (shiftOutS == 1) // read
 					state <= READ1; //move to READ1
 				else // write
-					state = WRITE1; //move to WRITE1
-				assign counter = 0;
-				assign ADDR_WE = 1;
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign SR_WE = 0;
+					state <= WRITE1; //move to WRITE1
+				counter <= 0;
+				ADDR_WE <= 1;
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				SR_WE <= 0;
 				end
 				
 			READ1: begin //Data memory being read
 				state <= READ2;
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 				
 			READ2: begin  //Push the calue to shift register
 				state <= READ3;
-				assign SR_WE = 1;  //Enable parallel load
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
+				SR_WE <= 1;  //Enable parallel load
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
 				end
 				
 			READ3: begin //Count the number of bits read
 				if(counter != 128)
-					assign counter = counter << 1;
+					if (counter==0)
+						counter <= 1;
+					else
+						counter <= counter << 1;
 				else
 					state <= DONE;
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				MISO_BUFF <= 1;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 				
 			WRITE1: begin  //Count the number of bits stored
 				if(counter!=128)
-					assign counter = counter << 1;
+					if (counter==0)
+						counter <= 1;
+					else
+						counter <= counter << 1;
 				else
 					state<=WRITE2;
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 				
 			WRITE2: begin  //Write to data memory
 				state <= DONE;
-				assign DM_WE = 1; //Enable write enble for data memory
-				assign MISO_BUFF = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				DM_WE <= 1; //Enable write enble for data memory
+				MISO_BUFF <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 				
 			DONE: begin  //Done for one cycle
-				assign counter = 0;
-				assign MISO_BUFF = 0;
-				assign DM_WE = 0;
-				assign ADDR_WE = 0;
-				assign SR_WE = 0;
+				counter <= 0;
+				MISO_BUFF <= 0;
+				DM_WE <= 0;
+				ADDR_WE <= 0;
+				SR_WE <= 0;
 				end
 			default: state <= GET;  //reset FSM
 	endcase
+	end
 	end
 endmodule
 
