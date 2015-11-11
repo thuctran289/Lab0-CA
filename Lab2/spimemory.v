@@ -18,7 +18,7 @@ module spiMemory
 	wire [2:0] positiveedge;  
 	wire [2:0] negativeedge;  
 	wire SR_WE, MISO_BUFF, DM_WE, ADDR_WE;
-	wire [7:0] dout, shiftRegOutP,dataMemOut;
+	wire [7:0] dout, shiftRegOutP, dataMemOut;
 	wire shiftRegOutS;
 	wire [7:0] address;
 	wire q;
@@ -31,7 +31,7 @@ module spiMemory
 	
 	addresslatch al(clk, shiftRegOutP, ADDR_WE, address);
 	
-	finiteStateMachine fsm(sclk_pin, cs_pin, shiftRegOutP[0], MISO_BUFF, DM_WE, ADDR_WE, SR_WE);
+	finitestatemachine fsm(positiveedge[1], conditioned[2], shiftRegOutP[0], MISO_BUFF, DM_WE, ADDR_WE, SR_WE);
 
 	dflipflop dff(clk, shiftRegOutS, negativeedge[1], q);
 
@@ -39,163 +39,3 @@ module spiMemory
 
 	datamemory dm(clk, dataMemOut, address[6:0], DM_WE, shiftRegOutP);
 endmodule
-
-
-module tristatebuffer
-(
-	input MISO_BUFF,
-	input q,
-	output miso_pin
-);
-	assign miso_pin = MISO_BUFF?q: 'bz;
-
-endmodule
-
-module dflipflop
-(
-	input clk,
-	input d,
-	input addr_we,
-	output reg q
-);
-
-	always @(posedge clk) begin  //update on every clock edge
-		if (addr_we==1)
-			q<=d;
-	end
-endmodule
-
-module addresslatch
-//d latch module 
-(
-	input clk,
-	input [7:0] d,
-	input addr_we,
-	output reg [7:0] q
-);
-
-	always @(clk==1)   //update on every clock edge
-		if (addr_we==1)
-			q<=d;
-endmodule
-
-module finiteStateMachine(
-	   	input sclk,   //clock
-	   	input CS,     //reset signal
-        input shiftOutS,  //shift register output
-        output reg MISO_BUFF,  //Master-in slave-out
-        output reg DM_WE,  //Data memory write-enable 
-        output reg ADDR_WE,  //Write-enable for address latch
-        output reg SR_WE  //Parallel load
-);
-
-	parameter SIZE = 3;  
-	parameter GET = 3'b000, GOT = 3'b001, READ1 = 3'b010, 
-	READ2 = 3'b011, READ3 = 3'b100, WRITE1 = 3'b101, WRITE2 = 3'b110, DONE = 3'b111;
-	//Binary encoding for phases
-	reg [7:0] counter; //initiate counter
-	// initial counter  = 0;
-	reg [SIZE-1:0] state;  //Seq part of FSM
-	reg [SIZE-1:0] next_state;  //Combo part for FSM
-
-	always @ (posedge sclk) begin: FSM
-
-	if (CS ==1 ) begin  //Reset counter when cs is 1
-		state <= GET;
-		counter <= 0;
-
-	end else begin
-
-		case(state)
-			GET: begin
-				if (counter != 128) begin  //count 8 bits
-					if (counter==0)
-						counter <= 1;
-					else begin
-						counter <= counter << 1;
-					end
-				end else begin
-					state <= GOT; //move to next phase after getting the 8 bits
-				end
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-			GOT: begin //read the LSB bit to determine whether to read or write
-				if (shiftOutS == 1) // read
-					state <= READ1; //move to READ1
-				else // write
-					state <= WRITE1; //move to WRITE1
-				counter <= 0;
-				ADDR_WE <= 1;
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				SR_WE <= 0;
-				end
-				
-			READ1: begin //Data memory being read
-				state <= READ2;
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-				
-			READ2: begin  //Push the calue to shift register
-				state <= READ3;
-				SR_WE <= 1;  //Enable parallel load
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				end
-				
-			READ3: begin //Count the number of bits read
-				if(counter != 128)
-					if (counter==0)
-						counter <= 1;
-					else
-						counter <= counter << 1;
-				else
-					state <= DONE;
-				MISO_BUFF <= 1;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-				
-			WRITE1: begin  //Count the number of bits stored
-				if(counter!=128)
-					if (counter==0)
-						counter <= 1;
-					else
-						counter <= counter << 1;
-				else
-					state<=WRITE2;
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-				
-			WRITE2: begin  //Write to data memory
-				state <= DONE;
-				DM_WE <= 1; //Enable write enble for data memory
-				MISO_BUFF <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-				
-			DONE: begin  //Done for one cycle
-				counter <= 0;
-				MISO_BUFF <= 0;
-				DM_WE <= 0;
-				ADDR_WE <= 0;
-				SR_WE <= 0;
-				end
-			default: state <= GET;  //reset FSM
-	endcase
-	end
-	end
-endmodule
-
