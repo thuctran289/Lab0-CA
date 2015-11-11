@@ -1,7 +1,7 @@
-# Lab 3 Pipeline CPU
+# Lab 3 Single-Cycle CPU
 
 ## Things to do
-### Pipeline CPU Instructions
+### Single-Cycle CPU Instructions
 - LW
 - SW
 - J
@@ -13,30 +13,26 @@
 - SUB
 - SLT
 
-#### Done by Thursday Night (2 hours)
-Determine phases for each instruction
-
-Determine structure of each phase
+#### Done by Thursday Night (1.5 hours)
+Determine modules for each instruction
 
 #### Done by Saturday Night (3 Hours)
 Implement each module in Verilog
 
 #### Done by Sunday Night ( 2 Hours)
-Connect Modules w/o control
+Integrate Modules and test
 
-#### Done by Tuesday
-Determine potential pipeline hazards  + Controls(5 Hours)
+#### Done by Tuesday (5 Hours)
+Determine Controls
 
-Determine Data Hazards
-- Figure out how to handle data hazards
-- Determine Control Hazards
-	- Figure out how to handle control hazards.
+#### Done by Wednesday (2 Hours)
+Figure out and Write Controls in verilog.
 
-#### Done by Wednesday
-Figure out and Write Controls in verilog
-
-#### Done by thursday
+#### Done by Thursday (4 Hours)
 Debugging + testing.
+
+#### Done by Friday (4 Hours)
+Lab Report
 
 
 #### Assembly Test Program - due Sun., Nov. 15 at 5pm
@@ -66,7 +62,7 @@ Work plan reflection
 
 ## Work Plan
 
-###Determine phases of each instruction and structure of each phase
+###Determine structure of each instructions
 Done by Thursday night (2 hours)
 
 ### Assembly Test Program
@@ -85,15 +81,11 @@ Done by Sunday night (2 hours)
 ### Midpoint Checkin with NINJAs
 Sunday night - is everything working okay?
 Do our plans make sense?
-Can we pull off this?
 
-### Pipeline Hazards and controls
+### Controls
 Done by Tuesday
-Determine potential pipeline hazards  + Controls(5 Hours)
-		Determine Data Hazards
-	Figure out how to handle data hazards
-	Determine Control Hazards
-		Figure out how to handle control hazards.
+Determine Controls(5 Hours)
+
 Done by Wednesday
 Figure out and Write Controls in verilog
 
