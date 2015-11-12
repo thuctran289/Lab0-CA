@@ -6,7 +6,7 @@
 //   1 synchronous, positive edge triggered write port
 //------------------------------------------------------------------------------
 
-module regfile
+module registerfile
 (
 	output[31:0]	ReadData1,	// Contents of first register read
 	output[31:0]	ReadData2,	// Contents of second register read
