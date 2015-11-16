@@ -1,21 +1,31 @@
-# Multiply 3*2, store result to s0
-addi $a0, $zero, 3
-addi $a1, $zero, 2
-jal MULTIPLY
-move $s0, $v1
-
-# exit program
-li $v0, 10
-syscall
+# Multiply opA*opB, store result to $s0
+# XORI $s0 with the expected result and then some other number
+# To change values of opA and opB, modify .data
+MAIN:
+	lw $a0, opA
+	lw $a1, opB
+	jal MULTIPLY
+	add $s0, $v1, $zero
+	
+	xori $s1, $v1, 6
+	xori $s2, $v1, 7
+	
+	# exit program
+	lw $v0, ten
+	syscall
 
 
 MULTIPLY:
-	addi $sp, $sp, -12
+	lw $t7, negtwelve
+	lw $t6, one
+	lw $t5, twelve
+	add $sp, $sp, $t7
 	sw $ra, 8($sp)
 	sw $a0, 4($sp)
 	sw $a1, 0($sp)
 	
-	addi $t3, $zero, 1 # t3 is 1
+	
+	add $t3, $zero, $t6 # t3 is 1
 	add $t1, $a1, $zero # t1 is a1
 	
 	add $v1, $v1, $zero # v0 = 0 
@@ -25,7 +35,7 @@ MULTIPLY:
 	lw $ra, 8($sp)
 	lw $a0, 4($sp)
 	lw $a1, 0($sp)
-	addi $sp, $sp, 12
+	add $sp, $sp, $t5
 	
 	
 	jr $ra
@@ -40,5 +50,11 @@ MULTIPLY:
 	
 	END:
 		jr $ra
-	
-	
+		
+.data
+	one: .word 1
+	opA: .word 3
+	opB: .word 2
+	negtwelve: .word -12
+	twelve: .word 12
+	ten: .word 10
