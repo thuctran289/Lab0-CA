@@ -10,18 +10,17 @@ module mux2to1
 endmodule
 
 
-module mux16by2to1
+module muxNby2to1
+#(parameter width = 16)
 (
-	output [15:0] out,
+	output [width-1:0] out,
 	input address,
-	input [15:0] inputs0, inputs1
+	input [width-1:0] inputs0, inputs1
 	);
-wire [15:0] inputs[1:0];
+wire [width-1:0] inputs[1:0];
 assign inputs[1] = inputs1;
 assign inputs[0] = inputs0;
 
 assign out = inputs[address];
-
-
 
 endmodule

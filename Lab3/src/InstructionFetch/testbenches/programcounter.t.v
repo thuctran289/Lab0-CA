@@ -4,7 +4,7 @@ module  testprogramCounter();
     wire [31:0] q;
     reg addr_we;
 
-    programCounter DUT(clk, d, addr_we, q);
+    programcounter DUT(clk, d, addr_we, q);
 
 
     initial clk=0;
