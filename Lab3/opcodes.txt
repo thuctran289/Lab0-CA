@@ -1,0 +1,59 @@
+General Format:
+
+R-type:
+Opcode [31:26]
+RS [25:21]
+rt [20-16]
+rd [15-11]
+Shift [10-6]
+Funct [5-0]
+
+L-Type:
+Opcode [31:26]
+RD [25-21]
+RS [20-16]
+IMM [15-0]
+
+J-Type
+Opcode  [31:26]
+Address [25:0]
+
+
+Functions to implement: (expect a left shift by 2 (target<<2) to occur in various places)
+LW (L Type, 0x23, source, desintation, offset)
+SW (L type, 0x2B, source, destination, offset)
+J (J type, 0x02, target) 
+JR (R type, 0x00, Source, Zeros, 0x08)
+JAL (J type, 0x03, destination ) )
+BNE (L Type, 0x05, source, destination, offset)
+XORI (L Type,0x0D, source, destination, immediate)
+ADD (R type, 0x00, source1,source2, destination, 0x20)
+SUB (R type, 0x00, source1,source2, destination, 0x22)
+SLT (R type, 0x00, source1,source2, destination, 0x2A)
+
+
+Organizing by Op Type:
+RTYPE
+JR (R type, 0x00, Source, Zeros, 0x08)
+ADD (R type, 0x00, source1,source2, destination, 0x20)
+SUB (R type, 0x00, source1,source2, destination, 0x22)
+SLT (R type, 0x00, source1,source2, destination, 0x2A)
+
+LTYPE
+
+BNE (L Type, 0x05, source, destination, offset)
+XORI (L Type,0x0D, source, destination, immediate)
+LW (L Type, 0x23, source, desintation, offset)
+SW (L type, 0x2B, source, destination, offset)
+
+JTYPE
+J (J type, 0x02, target) 
+JAL (J type, 0x03, destination ) 
+
+
+ALU Operation = 0x00 operation. 
+ALU Immediate operations = Add 8 to ALU operation code. Use 4th bit to designate that. 
+
+
+WHat kind of signals do we expect? 
+Data memory access == using 0x2X kind of format
