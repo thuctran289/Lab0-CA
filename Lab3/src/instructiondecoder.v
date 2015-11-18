@@ -52,6 +52,8 @@ module instructiondecoder
 		funct 	= instruction[5:0];
 		imm16	= instruction[15:0];
 		address = instruction[25:0];
+		branch	= 0;
+		jump	= 0;
 
 
 		case(opcode)
@@ -84,20 +86,47 @@ module instructiondecoder
 
 			XORI: begin
 				// TODO
+				RegDst = 0;
+				RegWr = 1;
+				AlUSrc = 0;
+				MemWr = 0;
+				MemToReg = 0; //???
+				ALUcntrl = ALU_XOR;
 			end
 
 			J: begin
 				// TODO
+				RegDst = 1'bx;
+				RegWr = 1'bx;
+				AlUSrc = 1'bx;
+				MemWr = 0;
+				MemToReg = 0; //???
+				ALUcntrl = 4'bx;
+				jump = 1;
 			end
 
 			JAL: begin
 				// TODO
+				RegDst = 1'bx;
+				RegWr = 1'bx;
+				AlUSrc = 1'bx;
+				MemWr = 0;
+				MemToReg = 0; //???
+				ALUcntrl = 4'bx;
+				jump = 1;
 			end
 
 			R_TYPE: begin
 				case(funct)
 					JR: begin
 						// TODO
+						RegDst = 1'bx; //??
+						RegWr = 1'bx; //??
+						AlUSrc = 1'bx; //??
+						MemWr = 0;		//??
+						MemToReg = 0; //???
+						ALUcntrl = 4'bx; //??
+						jump = 1;
 					end
 
 					ADD: begin
