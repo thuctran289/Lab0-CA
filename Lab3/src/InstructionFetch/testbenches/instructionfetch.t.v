@@ -33,7 +33,11 @@ initial begin
         branch = 0;
         jump = 1;
         #10;
-
+        jump = 0;
+        branch = 1;
+        #1;
+        branch  =0;
+        #10;
 	$finish;
 end
 
