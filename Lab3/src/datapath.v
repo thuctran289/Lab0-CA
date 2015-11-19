@@ -11,7 +11,7 @@ module datapath
     input [15:0] imm16,
     input jal,
     input [29:0] jalAddr,
-    input [29:0] jumpAddr,
+    output [25:0] jumpAddr,
     output zero,
     output [31:0] read1
 
