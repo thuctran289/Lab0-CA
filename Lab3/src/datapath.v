@@ -4,28 +4,39 @@ module datapath
     input [4:0] rd, rs, rt,
 	input regDst,
 	input regWr, 
-     input ALUSrc,
+    input ALUSrc,
     input [3:0] ALUcntrl,
-     input memWr,
+    input memWr,
     input memToReg,
     input [15:0] imm16,
-    output zero
+    input jal,
+    input [29:0] jalAddr,
+    input [29:0] jumpAddr,
+    output zero,
+    output [31:0] read1
 
-)
+);
 
-wire Aw;
-wire Dw;
-wire signextended;
+    wire [4:0] Aw;
+    wire [31:0] Dw, dataMemMuxOut;
+    wire signextended;
 
-wire [31:0] read1, read2, alu2in, ALUOut;
+    wire [31:0] read2, alu2in, ALUOut, memdOut;
 
 
 
-muxNby2to1 #(5) regdst(Aw, RegDst, rd, rt);
-registerfile regfile(read1, read2, Dw, rs, rt, regWr, clk);
-muxNby2to1 #(32) alusrc(alu2in, ALUSrc, read2, signextended);
-signextend #(32,16) immsixteen(imm16, signextended);
-MIPSALU alu(ALUcntrl, read1, alu2in, ALUOut, zero);
+
+    muxNby2to1 #(5) regdst(Aw, RegDst, rt, rd);
+    registerfile regfile(read1, read2, Dw, rs, rt, regWr, clk);
+    assign jumpAddr = read1[27:2];
+    muxNby2to1 #(32) alusrc(alu2in, ALUSrc, read2, signextended);
+    signextend #(32,16) immsixteen(imm16, signextended);
+    MIPSALU alu(ALUcntrl, read1, alu2in, ALUOut, zero);
+
+    memory datamem(clk, memWr, ALUOut, read2, memdOut);
+    muxNby2to1 #(32) muxmemtoreg(dataMemMuxOut, memToReg, ALUOut, memdOut);
+
+    muxNby2to1 #(32) jalMux(Dw, jal, dataMemMuxOut, {jalAddr, 2'b00});
 
 
 endmodule

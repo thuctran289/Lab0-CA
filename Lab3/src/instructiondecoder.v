@@ -13,7 +13,9 @@ module instructiondecoder
 	output reg [15:0]	imm16,
 	output reg [25:0]	address,
 	output reg 			branch,
-	output reg 			jump
+	output reg 			jump,
+	output reg 			jr,
+	output reg 			jal
 );
 
 	parameter 	LW 		= 6'd35, // I-type OP codes
@@ -54,6 +56,8 @@ module instructiondecoder
 		address = instruction[25:0];
 		branch	= 0;
 		jump	= 0;
+		jr 		= 0;
+		jal 	= 0;
 
 
 		case(opcode)
@@ -67,7 +71,7 @@ module instructiondecoder
 			end
 
 			SW: begin
-				RegDst = 1'bx;
+				RegDst = 0;//1'bx;
 				RegWr = 0;
 				AlUSrc = 0;
 				MemWr = 1; //??
@@ -76,12 +80,13 @@ module instructiondecoder
 			end
 
 			BNE: begin
-				RegDst = 1'bx;
+				RegDst = 0;//1'bx;
 				RegWr = 0;
 				AlUSrc = 1;
 				MemWr = 0; //??
 				MemToReg = 0; //???
 				ALUcntrl = ALU_SUB;
+				branch = 1;
 			end
 
 			XORI: begin
@@ -96,37 +101,40 @@ module instructiondecoder
 
 			J: begin
 				// TODO
-				RegDst = 1'bx;
-				RegWr = 1'bx;
-				AlUSrc = 1'bx;
+				RegDst = 0;//1'bx;
+				RegWr = 0;//1'bx;
+				AlUSrc = 0;//1'bx;
 				MemWr = 0;
 				MemToReg = 0; //???
-				ALUcntrl = 4'bx;
+				ALUcntrl = 4'b0;//4'bx;
 				jump = 1;
 			end
 
 			JAL: begin
 				// TODO
-				RegDst = 1'bx;
-				RegWr = 1'bx;
-				AlUSrc = 1'bx;
+				RegDst = 0;
+				RegWr = 1;
+				AlUSrc = 0;//1'bx;
 				MemWr = 0;
-				MemToReg = 0; //???
-				ALUcntrl = 4'bx;
+				MemToReg = 0;//1'bx; //???
+				ALUcntrl = 4'b0;//4'bx;
 				jump = 1;
+				jal = 1;
+				rt = 4'd31;
 			end
 
 			R_TYPE: begin
 				case(funct)
 					JR: begin
 						// TODO
-						RegDst = 1'bx; //??
-						RegWr = 1'bx; //??
-						AlUSrc = 1'bx; //??
+						RegDst = 0;//1'bx; //??
+						RegWr = 0;//1'bx; //??
+						AlUSrc = 0;//1'bx; //??
 						MemWr = 0;		//??
 						MemToReg = 0; //???
-						ALUcntrl = 4'bx; //??
+						ALUcntrl = 4'b0;//4'bx; //??
 						jump = 1;
+						jr = 1;
 					end
 
 					ADD: begin
