@@ -8,7 +8,9 @@ module instructionfetch
 	input zero, 
 	input jump,
 	input pc_we,
-	output [29:0] address
+	input jr,
+	output [29:0] add_res,
+	output [31:0] instruction
 );
 
 
@@ -16,7 +18,6 @@ module instructionfetch
 	wire [31:0] next_PC;
 	wire [29:0] concat_res;
 	wire [29:0] branch_coord;
-	wire [29:0] add_res;
 	wire [29:0] imm30;
 	wire [25:0] TInst;
 	wire branchAndzero;
@@ -29,12 +30,15 @@ module instructionfetch
 	and add(branchAndzero, branch, nZero);
 	assign next_PC[1:0] = 2'b00;
 	not (nbranchAndzero, branchAndzero);
+	muxNby2to1 #(26) tinstchoice(Tinst, jr, j_tinst, jr_tinst[27:2]);
 	programcounter PC(clk, next_PC, pc_we, current_PC);
 	concatenate concat(current_PC[31:28], TInst, concat_res);
 	signextend signext(imm16, imm30);
 	muxNby2to1 #(30) brancher(branch_coord, branchAndzero, 30'b000000000000000000000000000000, imm30);
 	FullAdder30 PC_Step(add_res, current_PC[31:2], branch_coord,nbranchAndzero);
 	muxNby2to1 #(30) jumpmachine(next_PC[31:2], jump, add_res,concat_res);
+	memory programMem(clk, 0, {address, 2'b00}, instruction);
 	assign address = current_PC[31:2];
+
 
 endmodule
