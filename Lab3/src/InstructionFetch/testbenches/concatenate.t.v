@@ -8,13 +8,22 @@ concatenate DUT(PCbit, Tinst, out_inst);
 initial begin
     $dumpfile("testconcatenate.t.vcd");
     $dumpvars(0,testconcatenate);
+    $display("Leading Bits,               Second Bits,                        Results");
+    PCbit = -1;
+    Tinst = 0;
+    $display("        %b,%b, %b", PCbit, Tinst, out_inst);
+    Tinst = -1;
+
+    $display("        %b,%b, %b", PCbit, Tinst, out_inst);
+    PCbit = 0;
+
+    $display("        %b,%b, %b", PCbit, Tinst, out_inst);
+    Tinst = 155;
+
+    $display("        %b,%b, %b", PCbit, Tinst, out_inst);
     PCbit = 5;
-    Tinst = 151;
-    #10
-    PCbit = 10;
-    #10
-    Tinst = 200;
-    #10
+    
+    $display("        %b,%b, %b", PCbit, Tinst, out_inst);
     $finish;
 end
 
