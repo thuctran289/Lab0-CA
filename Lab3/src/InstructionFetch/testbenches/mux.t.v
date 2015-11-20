@@ -20,13 +20,24 @@ initial begin
 		b = -1;
 		choice = 0;
 		#10;
+
+        $display("TESTING 16 bit 2to1 MUX");
+        $display("    A,     B, Choice,   Out, Exp.OUT");
+        $display("%d, %d,      %d, %d,       0",a,b,choice, out);
 		choice = 1;
+        $display("%d, %d,      %d, %d,   65535",a,b,choice, out);
 		#10;
+		
+        $display("TESTING 30 bit 2to1 MUX");
+        $display("         A,          B, Choice,        Out,      Exp.OUT");
 		a1 = 0;
 		b1 = -1;
 		choice1 = 0;
+        $display("%d, %d,      %d, %d,            0",a1,b1,choice1, out1);
+
 		#10;
 		choice1 = 1;
+        $display("%d, %d,      %d, %d,   1073741823",a1,b1,choice1, out1);
 		#10;
 
 
