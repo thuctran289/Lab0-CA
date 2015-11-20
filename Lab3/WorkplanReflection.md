@@ -1,0 +1,2 @@
+Workplan Reflection:
+For the workplan, we had managed to follow the guidelines for the plan releatively well up until the control part of the lab. Hence, we were relatively on track for finishing with a comfortable lead time up until tuesday/wednesday. Unfortunately, we had still underestimated the amount of time necessary for completing the controls. Furthermore, we had also had issues with finding an appropriate time for meetings, which had us sacrificing a day on our schedule. As a result, we had encounterd more of a time crunch than what we had initially desired. 
