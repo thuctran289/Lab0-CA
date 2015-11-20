@@ -57,9 +57,9 @@ module testregister32zero();
 
 
 	    if(dutpassed == 0) begin
-        	$display("32 bit Register is broken!!");
+        	$display("32 bit Zero Register is broken!!");
     	end else begin
-        	$display("32 bit Register works!!");
+        	$display("32 bit Zero Register works!!");
     	end  
 
     	$finish; 
