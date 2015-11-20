@@ -8,22 +8,29 @@ module  testprogramCounter();
 
 
     initial clk=0;
-    always #10 clk=!clk;    // 50MHz Clock
+    always #1 clk=!clk;    // 50MHz Clock
     initial d = 0;
     initial addr_we = 0;
     
 initial begin
     $dumpfile("testprogramcounter.t.vcd");
     $dumpvars(0,testprogramCounter);
-    d = 1;
-    #10
-    addr_we = 1;
-    #10
+    $display("Program Counter Testing");
+    $display("AddreWE,   D,          Q");
+    $display("%d,%d, %d", addr_we, d, q);
     d = 10;
-    #10
-    addr_we = 0;
+    addr_we = 1;
+    #2
+
+    $display("%d,%d, %d", addr_we, d, q);
     d = 100;
-    #10
+    #2
+    $display("%d,%d, %d", addr_we, d, q);
+    addr_we = 0;
+    d = 1000;
+
+    $display("%d,%d, %d", addr_we, d, q);
+    #2
     $finish;
 end
 
