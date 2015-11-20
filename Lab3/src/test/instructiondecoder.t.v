@@ -40,8 +40,8 @@ module testinstructiondecoder();
 	integer i;
 
 	initial begin
-		$dumpfile("register32.t.vcd");
-	    $dumpvars(0, testregister32);
+		$dumpfile("instructiondecoder.t.vcd");
+	    $dumpvars(0, testinstructiondecoder);
 	    
 	    $display("32 bit Register test bench");
         $display("--------------------------");
@@ -50,14 +50,14 @@ module testinstructiondecoder();
 
 	    // Test Case 1:
 	    //    LW
-	    instruction = {6'd35, 6'd8, 6'd11, 15'd12};
+	    instruction = {6'd35, 5'd8, 5'd11, 15'd12};
 	    #5;
-	    if(rs != 6'd8) begin
+	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW rs is not correct");
             $display("	rs reads %d when should be 8", rs);
 	    end
-	    if(rs != 6'd11) begin
+	    if(rt != 5'd11) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW rt is not correct");
             $display("	rt reads %d when should be 11", rt);
@@ -90,24 +90,24 @@ module testinstructiondecoder();
 	    if(MemToReg != 1) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW MemToReg is not correct");
-            $display("	MemToReg reads %d when should be 1 for LW", AlUSrc);
+            $display("	MemToReg reads %d when should be 1 for LW", MemToReg);
 	    end
 	    if(ALUcntrl != 4'd00) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 0000 for ADD for LW", AlUSrc);
+            $display("	ALUcntrl reads %d when should be 0000 for ADD for LW", ALUcntrl);
 	    end
 
 	    // Test Case 2:
 	    //    SW
-	    instruction = {6'd43, 6'd8, 6'd11, 15'd12};
+	    instruction = {6'd43, 5'd8, 5'd11, 15'd12};
 	    #5;
-	    if(rs != 6'd8) begin
+	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
             $display("Test Case 2 Failed - SW rs is not correct");
             $display("	rs reads %d when should be 8", rs);
 	    end
-	    if(rs != 6'd11) begin
+	    if(rt != 5'd11) begin
 	    	dutpassed = 0;
             $display("Test Case 2 Failed - SW rt is not correct");
             $display("	rt reads %d when should be 11", rt);
@@ -140,24 +140,24 @@ module testinstructiondecoder();
 	    if(MemToReg != 1) begin
 	    	dutpassed = 0;
             $display("Test Case 2 Failed - SW MemToReg is not correct");
-            $display("	MemToReg reads %d when should be 1 for SW", AlUSrc);
+            $display("	MemToReg reads %d when should be 1 for SW", MemToReg);
 	    end
 	    if(ALUcntrl != 4'd00) begin
 	    	dutpassed = 0;
             $display("Test Case 2 Failed - SW ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 0000 for ADD for SW", AlUSrc);
+            $display("	ALUcntrl reads %d when should be 0000 for ADD for SW", ALUcntrl);
 	    end
 
 	    // Test Case 3:
 	    //    BNE
-	    instruction = {6'd05, 6'd8, 6'd11, 15'd12};
+	    instruction = {6'd05, 5'd8, 5'd11, 15'd12};
 	    #5;
-	    if(rs != 6'd8) begin
+	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
             $display("Test Case 3 Failed - BNE rs is not correct");
             $display("	rs reads %d when should be 8", rs);
 	    end
-	    if(rs != 6'd11) begin
+	    if(rt != 5'd11) begin
 	    	dutpassed = 0;
             $display("Test Case 3 Failed - BNE rt is not correct");
             $display("	rt reads %d when should be 11", rt);
@@ -185,17 +185,17 @@ module testinstructiondecoder();
 	    if(MemWr != 0) begin
 	    	dutpassed = 0;
             $display("Test Case 3 Failed - BNE MemWr is not correct");
-            $display("	MemWr reads %d when should be 0 for SW", MemWr);
+            $display("	MemWr reads %d when should be 0 for BNE", MemWr);
 	    end
 	    if(MemToReg != 0) begin
 	    	dutpassed = 0;
             $display("Test Case 3 Failed - BNE MemToReg is not correct");
-            $display("	MemToReg reads %d when should be 0 for BNE", AlUSrc);
+            $display("	MemToReg reads %d when should be 0 for BNE", MemToReg);
 	    end
 	    if(ALUcntrl != 4'd06) begin
 	    	dutpassed = 0;
             $display("Test Case 3 Failed - BNE ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 6 for SUB for BNE", AlUSrc);
+            $display("	ALUcntrl reads %d when should be 6 for SUB for BNE", ALUcntrl);
 	    end
 	    if(branch != 1) begin
 	    	dutpassed = 0;
@@ -205,52 +205,342 @@ module testinstructiondecoder();
 
 	    // Test Case 4:
 	    //    XORI
-	    instruction = {6'd14, 6'd8, 6'd11, 15'd12};
+	    instruction = {6'd14, 5'd8, 5'd11, 15'd12};
 	    #5;
-	    if(rs != 6'd8) begin
+	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE rs is not correct");
+            $display("Test Case 4 Failed - XORI rs is not correct");
             $display("	rs reads %d when should be 8", rs);
 	    end
-	    if(rs != 6'd11) begin
+	    if(rt != 5'd11) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE rt is not correct");
+            $display("Test Case 4 Failed - XORI rt is not correct");
             $display("	rt reads %d when should be 11", rt);
 	    end
 	    if(imm16 != 15'd12) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE imm16 is not correct");
+            $display("Test Case 4 Failed - XORI imm16 is not correct");
             $display("	imm16 reads %d when should be 12", imm16);
 	    end
-	    // if(RegDst != 0) begin
-	    // 	dutpassed = 0;
-     //        $display("Test Case 2 Failed - LW RegDst is not correct");
-     //        $display("RegDst reads %d when should be 0 for LW", RegDst);
-	    // end
-	    if(RegWr != 0) begin
+	    if(RegDst != 0) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE RegWr is not correct");
-            $display("	RegWr reads %d when should be 0 for BNE", RegWr);
+            $display("Test Case 4 Failed - XORI RegDst is not correct");
+            $display("	RegDst reads %d when should be 0 for XORI", RegDst);
 	    end
-	    if(AlUSrc != 1) begin
+	    if(RegWr != 1) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE ALUSrc is not correct");
-            $display("	AlUSrc reads %d when should be 1 for BNE", AlUSrc);
+            $display("Test Case 4 Failed - XORI RegWr is not correct");
+            $display("	RegWr reads %d when should be 1 for XORI", RegWr);
+	    end
+	    if(AlUSrc != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 4 Failed - XORI ALUSrc is not correct");
+            $display("	AlUSrc reads %d when should be 0 for XORI", AlUSrc);
 	    end
 	    if(MemWr != 0) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE MemWr is not correct");
-            $display("	MemWr reads %d when should be 0 for SW", MemWr);
+            $display("Test Case 4 Failed - XORI MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for XORI", MemWr);
 	    end
 	    if(MemToReg != 0) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE MemToReg is not correct");
-            $display("	MemToReg reads %d when should be 0 for BNE", AlUSrc);
+            $display("Test Case 4 Failed - XORI MemToReg is not correct");
+            $display("	MemToReg reads %d when should be 0 for XORI", MemToReg);
+	    end
+	    if(ALUcntrl != 4'd10) begin
+	    	dutpassed = 0;
+            $display("Test Case 4 Failed - BNE ALUcntrl is not correct");
+            $display("	ALUcntrl reads %d when should be 10 for XOR for XORI", ALUcntrl);
+	    end
+
+	    // Test Case 5:
+	    //    J
+	    instruction = {6'd2, 26'd30};
+	    #5;
+	    // if(RegDst != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 5 Failed - J RegDst is not correct");
+     //        $display("	RegDst reads %d when should be 0 for XORI", RegDst);
+	    // end
+	    // if(RegWr != 1) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI RegWr is not correct");
+     //        $display("	RegWr reads %d when should be 1 for XORI", RegWr);
+	    // end
+	    // if(AlUSrc != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI ALUSrc is not correct");
+     //        $display("	AlUSrc reads %d when should be 0 for XORI", AlUSrc);
+	    // end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 5 Failed - J MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for J", MemWr);
+	    end
+	    // if(MemToReg != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI MemToReg is not correct");
+     //        $display("	MemToReg reads %d when should be 0 for XORI", MemToReg);
+	    // end
+	    // if(ALUcntrl != 4'd10) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - BNE ALUcntrl is not correct");
+     //        $display("	ALUcntrl reads %d when should be 10 for XOR for XORI", ALUcntrl);
+	    // end
+	    if(jump != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 5 Failed - jump flag is not set for J");
+            $display("	jump reads %d when should be 1 for J", jump);
+	    end
+
+	    // Test Case 6:
+	    //    JAL
+	    instruction = {6'd3, 26'd30};
+	    #5;
+	    if(rt != 5'd31) begin
+	    	dutpassed = 0;
+            $display("Test Case 6 Failed - JAL rt is not correct");
+            $display("	rt reads %d when should be 31", rt);
+	    end
+	    if(RegDst != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 6 Failed - JAL RegDst is not correct");
+            $display("	RegDst reads %d when should be 0 for JAL", RegDst);
+	    end
+	    if(RegWr != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 6 Failed - JAL RegWr is not correct");
+            $display("	RegWr reads %d when should be 1 for JAL", RegWr);
+	    end
+	    // if(AlUSrc != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI ALUSrc is not correct");
+     //        $display("	AlUSrc reads %d when should be 0 for XORI", AlUSrc);
+	    // end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 6 Failed - JAL MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for JAL", MemWr);
+	    end
+	    // if(MemToReg != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI MemToReg is not correct");
+     //        $display("	MemToReg reads %d when should be 0 for XORI", MemToReg);
+	    // end
+	    // if(ALUcntrl != 4'd10) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - BNE ALUcntrl is not correct");
+     //        $display("	ALUcntrl reads %d when should be 10 for XOR for XORI", ALUcntrl);
+	    // end
+	    if(jump != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 6 Failed - jump flag is not set for JAL");
+            $display("	jump reads %d when should be 1 for JAL", jump);
+	    end
+	    if(jal != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 5 Failed - jal flag is not set for JAL");
+            $display("	jal reads %d when should be 1 for JAL", jal);
+	    end
+
+	    // Test Case 7:
+	    //    JR
+	    instruction = {6'd0, 5'd31, 5'd19, 5'd8, 5'd0, 5'd08};
+	    #5;
+	    if(rs != 5'd31) begin
+	    	dutpassed = 0;
+            $display("Test Case 7 Failed - JR rs is not correct");
+            $display("	rs reads %d when should be 31", rs);
+	    end
+	    // if(RegDst != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI RegDst is not correct");
+     //        $display("	RegDst reads %d when should be 0 for XORI", RegDst);
+	    // end
+	    // if(RegWr != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI RegWr is not correct");
+     //        $display("	RegWr reads %d when should be 1 for XORI", RegWr);
+	    // end
+	    // if(AlUSrc != 0) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - XORI ALUSrc is not correct");
+     //        $display("	AlUSrc reads %d when should be 0 for XORI", AlUSrc);
+	    // end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 7 Failed - JR MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for JR", MemWr);
+	    end
+	    if(MemToReg != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 7 Failed - JR MemToReg is not correct");
+            $display("	MemToReg reads %d when should be 0 for JR", MemToReg);
+	    end
+	    // if(ALUcntrl != 4'd10) begin
+	    // 	dutpassed = 0;
+     //        $display("Test Case 4 Failed - BNE ALUcntrl is not correct");
+     //        $display("	ALUcntrl reads %d when should be 10 for XOR for XORI", ALUcntrl);
+	    // end
+	    if(jump != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 7 Failed - jump flag is not set for JR");
+            $display("	jump reads %d when should be 1 for JR", jump);
+	    end
+	    if(jal != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 7 Failed - jr flag is not set for JR");
+            $display("	jr reads %d when should be 1 for JR", jr);
+	    end
+
+	    // Test Case 8:
+	    //    ADD
+	    instruction = {6'd0, 5'd9, 5'd10, 5'd8, 5'd0, 6'd32};
+	    #5;
+	    if(rs != 5'd9) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD rs is not correct");
+            $display("	rs reads %d when should be 9", rs);
+	    end
+	    if(rt != 5'd10) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD rt is not correct");
+            $display("	rt reads %d when should be 10", rt);
+	    end
+	    if(rd != 5'd8) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD rd is not correct");
+            $display("	rd reads %d when should be 8", rd);
+	    end
+	    if(RegDst != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD RegDst is not correct");
+            $display("	RegDst reads %d when should be 1 for ADD", RegDst);
+	    end
+	    if(RegWr != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD RegWr is not correct");
+            $display("	RegWr reads %d when should be 1 for ADD", RegWr);
+	    end
+	    if(AlUSrc != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD ALUSrc is not correct");
+            $display("	AlUSrc reads %d when should be 1 for ADD", AlUSrc);
+	    end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for ADD", MemWr);
+	    end
+	    if(MemToReg != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD MemToReg is not correct");
+            $display("	MemToReg reads %d when should be 0 for ADD", MemToReg);
+	    end
+	    if(ALUcntrl != 4'd02) begin
+	    	dutpassed = 0;
+            $display("Test Case 8 Failed - ADD ALUcntrl is not correct");
+            $display("	ALUcntrl reads %d when should be 2 for ADD for ADD", ALUcntrl);
+	    end
+
+	    // Test Case 9:
+	    //    SUB
+	    instruction = {6'd0, 5'd9, 5'd10, 5'd8, 5'd0, 6'd34};
+	    #5;
+	    if(rs != 5'd9) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB rs is not correct");
+            $display("	rs reads %d when should be 9", rs);
+	    end
+	    if(rt != 5'd10) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB rt is not correct");
+            $display("	rt reads %d when should be 10", rt);
+	    end
+	    if(rd != 5'd8) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB rd is not correct");
+            $display("	rd reads %d when should be 8", rd);
+	    end
+	    if(RegDst != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB RegDst is not correct");
+            $display("	RegDst reads %d when should be 1 for SUB", RegDst);
+	    end
+	    if(RegWr != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB RegWr is not correct");
+            $display("	RegWr reads %d when should be 1 for SUB", RegWr);
+	    end
+	    if(AlUSrc != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB ALUSrc is not correct");
+            $display("	AlUSrc reads %d when should be 1 for SUB", AlUSrc);
+	    end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for SUB", MemWr);
+	    end
+	    if(MemToReg != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 9 Failed - SUB MemToReg is not correct");
+            $display("	MemToReg reads %d when should be 0 for SUB", MemToReg);
 	    end
 	    if(ALUcntrl != 4'd06) begin
 	    	dutpassed = 0;
-            $display("Test Case 3 Failed - BNE ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 6 for SUB for BNE", AlUSrc);
+            $display("Test Case 9 Failed - SUB ALUcntrl is not correct");
+            $display("	ALUcntrl reads %d when should be 6 for SUB for SUB", ALUcntrl);
+	    end
+
+	    // Test Case 10:
+	    //    SLT
+	    instruction = {6'd0, 5'd9, 5'd10, 5'd8, 5'd0, 6'd42};
+	    #5;
+	    if(rs != 5'd9) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT rs is not correct");
+            $display("	rs reads %d when should be 9", rs);
+	    end
+	    if(rt != 5'd10) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT rt is not correct");
+            $display("	rt reads %d when should be 10", rt);
+	    end
+	    if(rd != 5'd8) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT rd is not correct");
+            $display("	rd reads %d when should be 8", rd);
+	    end
+	    if(RegDst != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT RegDst is not correct");
+            $display("	RegDst reads %d when should be 1 for SLT", RegDst);
+	    end
+	    if(RegWr != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT RegWr is not correct");
+            $display("	RegWr reads %d when should be 1 for SLT", RegWr);
+	    end
+	    if(AlUSrc != 1) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT ALUSrc is not correct");
+            $display("	AlUSrc reads %d when should be 1 for SLT", AlUSrc);
+	    end
+	    if(MemWr != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT MemWr is not correct");
+            $display("	MemWr reads %d when should be 0 for SLT", MemWr);
+	    end
+	    if(MemToReg != 0) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT MemToReg is not correct");
+            $display("	MemToReg reads %d when should be 0 for SLT", MemToReg);
+	    end
+	    if(ALUcntrl != 4'd06) begin
+	    	dutpassed = 0;
+            $display("Test Case 10 Failed - SLT ALUcntrl is not correct");
+            $display("	ALUcntrl reads %d when should be 7 for SLT for SLT", ALUcntrl);
 	    end
 
 	    if(dutpassed == 0) begin

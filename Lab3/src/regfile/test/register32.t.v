@@ -30,7 +30,7 @@ module testregister32();
 	    // Test Case 1:
 	    //    If wrenable is on, check if q is d
 	    wrenable = 1;
-	    for(i=0; i<32; i=i+1) begin // 4294967296 = 2^32
+	    for(i=0; i<32; i=i+1) begin
 	    	d = i;
 	    	#5 clk=1; #5 clk=0;
 	    	if(q != i) begin

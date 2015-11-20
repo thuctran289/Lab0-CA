@@ -120,7 +120,7 @@ module instructiondecoder
 				ALUcntrl = 4'b0;//4'bx;
 				jump = 1;
 				jal = 1;
-				rt = 4'd31;
+				rt = 5'd31;
 			end
 
 			R_TYPE: begin
@@ -135,6 +135,7 @@ module instructiondecoder
 						ALUcntrl = 4'b0;//4'bx; //??
 						jump = 1;
 						jr = 1;
+						rs = 5'd31;
 					end
 
 					ADD: begin
