@@ -1,3 +1,6 @@
+// --------------- //
+// 32-bit register //
+// --------------- //
 module register32
 (
 	output reg	[31:0] q,

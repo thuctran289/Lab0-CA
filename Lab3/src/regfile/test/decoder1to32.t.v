@@ -1,4 +1,6 @@
-// tests the decoder
+// --------------------------- //
+// Test bench for decoder1to32 //
+// --------------------------- //
 module testdecoder1to32();
 	
 	wire [31:0] out;
@@ -32,6 +34,7 @@ module testdecoder1to32();
 	    	if (out != 0) begin
 	    		$display("Test Case 1 Failed - Enable is broken");
 	    		$display("out reads %d for address $d and enable %b", out, address, enable);
+	    		dutpassed = 0;
 	    	end
 	    end
 
@@ -43,6 +46,7 @@ module testdecoder1to32();
 	    	if (out == 0) begin
 	    		$display("Test Case 2 Failed - Enable is broken");
 	    		$display("out reads %d for address $d and enable %b", out, address, enable);
+	    		dutpassed = 0;
 	    	end
 	    end
 
@@ -54,6 +58,7 @@ module testdecoder1to32();
 	    	if (out[i] == 0) begin
 	    		$display("Test Case 3 Failed - Out is not set correctly when enable is on");
 	    		$display("out reads %d for address $d and enable %b", out, address, enable);
+	    		dutpassed = 0;
 	    	end
 	    end	
 
