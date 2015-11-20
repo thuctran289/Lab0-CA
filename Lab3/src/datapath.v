@@ -27,7 +27,7 @@ module datapath
 
 
     muxNby2to1 #(5) regdst(Aw, RegDst, rt, rd);
-    registerfile regfile(read1, read2, Dw, rs, rt, regWr, clk);
+    registerfile regfile(read1, read2, Dw, rs, rt, Aw, regWr, clk);
     assign jumpAddr = read1[27:2];
     muxNby2to1 #(32) alusrc(alu2in, ALUSrc, read2, signextended);
     signextend #(32,16) immsixteen(imm16, signextended);
