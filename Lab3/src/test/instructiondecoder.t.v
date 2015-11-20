@@ -50,12 +50,12 @@ module testinstructiondecoder();
 
 	    // Test Case 1:
 	    //    LW
-	    instruction = {6'd35, 5'd8, 5'd11, 15'd12};
+	    instruction = {6'd35, 5'd8, 5'd11, 16'd12};
 	    #5;
 	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW rs is not correct");
-            $display("	rs reads %d when should be 8", rs);
+            $display("	rs reads %b when should be 8", rs);
 	    end
 	    if(rt != 5'd11) begin
 	    	dutpassed = 0;
@@ -92,15 +92,15 @@ module testinstructiondecoder();
             $display("Test Case 1 Failed - LW MemToReg is not correct");
             $display("	MemToReg reads %d when should be 1 for LW", MemToReg);
 	    end
-	    if(ALUcntrl != 4'd00) begin
+	    if(ALUcntrl != 4'd02) begin
 	    	dutpassed = 0;
             $display("Test Case 1 Failed - LW ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 0000 for ADD for LW", ALUcntrl);
+            $display("	ALUcntrl reads %d when should be 2 for ADD for LW", ALUcntrl);
 	    end
 
 	    // Test Case 2:
 	    //    SW
-	    instruction = {6'd43, 5'd8, 5'd11, 15'd12};
+	    instruction = {6'd43, 5'd8, 5'd11, 16'd12};
 	    #5;
 	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
@@ -142,15 +142,15 @@ module testinstructiondecoder();
             $display("Test Case 2 Failed - SW MemToReg is not correct");
             $display("	MemToReg reads %d when should be 1 for SW", MemToReg);
 	    end
-	    if(ALUcntrl != 4'd00) begin
+	    if(ALUcntrl != 4'd2) begin
 	    	dutpassed = 0;
             $display("Test Case 2 Failed - SW ALUcntrl is not correct");
-            $display("	ALUcntrl reads %d when should be 0000 for ADD for SW", ALUcntrl);
+            $display("	ALUcntrl reads %d when should be 2 for ADD for SW", ALUcntrl);
 	    end
 
 	    // Test Case 3:
 	    //    BNE
-	    instruction = {6'd05, 5'd8, 5'd11, 15'd12};
+	    instruction = {6'd05, 5'd8, 5'd11, 16'd12};
 	    #5;
 	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
@@ -205,7 +205,7 @@ module testinstructiondecoder();
 
 	    // Test Case 4:
 	    //    XORI
-	    instruction = {6'd14, 5'd8, 5'd11, 15'd12};
+	    instruction = {6'd14, 5'd8, 5'd11, 16'd12};
 	    #5;
 	    if(rs != 5'd8) begin
 	    	dutpassed = 0;
@@ -387,7 +387,7 @@ module testinstructiondecoder();
             $display("Test Case 7 Failed - jump flag is not set for JR");
             $display("	jump reads %d when should be 1 for JR", jump);
 	    end
-	    if(jal != 1) begin
+	    if(jr != 1) begin
 	    	dutpassed = 0;
             $display("Test Case 7 Failed - jr flag is not set for JR");
             $display("	jr reads %d when should be 1 for JR", jr);
@@ -537,16 +537,16 @@ module testinstructiondecoder();
             $display("Test Case 10 Failed - SLT MemToReg is not correct");
             $display("	MemToReg reads %d when should be 0 for SLT", MemToReg);
 	    end
-	    if(ALUcntrl != 4'd06) begin
+	    if(ALUcntrl != 4'd07) begin
 	    	dutpassed = 0;
             $display("Test Case 10 Failed - SLT ALUcntrl is not correct");
             $display("	ALUcntrl reads %d when should be 7 for SLT for SLT", ALUcntrl);
 	    end
 
 	    if(dutpassed == 0) begin
-        	$display("32 bit Register is broken!!");
+        	$display("Instruction decoder is broken!!");
     	end else begin
-        	$display("32 bit Register works!!");
+        	$display("Instruction decoder works!!");
     	end  
 
     	$finish; 
