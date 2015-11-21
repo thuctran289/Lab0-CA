@@ -547,7 +547,11 @@ module testinstructiondecoder();
         	$display("Instruction decoder is broken!!");
     	end else begin
         	$display("Instruction decoder works!!");
-    	end  
+    	end 
+
+    	instruction = 32'h014b4820;
+    	$display(dut.opcode);
+    	#500
 
     	$finish; 
     end

@@ -1,11 +1,8 @@
-module signextend
-#(parameter out_width = 30,
-	parameter in_width = 16
-	)
+module signextend #(parameter out_width = 30, in_width = 16)
 (
 	input [in_width-1:0] imm16,
-	output [out_width-1:0] imm30
-	);
+	output [out_width-1:0] out
+);
 wire [out_width-in_width-1:0] signimm[1:0];
 assign signimm[0] = 0;
 assign signimm[1] = -1;

@@ -8,7 +8,7 @@ module memory(clk, regWE, Addr, DataIn, DataOut);
 	always @(posedge clk)
   		if (regWE)
     		mem[Addr] <= DataIn;
-	initial $readmemh("file.dat", mem);
+	initial $readmemh("data.dat", mem);
 
 	assign DataOut = mem[Addr];
 endmodule

@@ -9,7 +9,7 @@ module instructionmemory(clk, regWE, Addr, DataIn, DataOut);
 	always @(posedge clk)
   		if (regWE)
     		mem[Addr] <= DataIn;
-	initial $readmemh("text.dat", mem);
+	initial $readmemh("InstructionFetch/text.dat", mem);
 
 	assign DataOut = mem[Addr];
 endmodule

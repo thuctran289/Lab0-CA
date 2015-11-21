@@ -74,8 +74,8 @@ module instructiondecoder
 				RegDst = 0;//1'bx;
 				RegWr = 0;
 				AlUSrc = 0;
-				MemWr = 1; //??
-				MemToReg = 1; //???
+				MemWr = 1;
+				MemToReg = 1;
 				ALUcntrl = ALU_ADD;
 			end
 
@@ -83,40 +83,37 @@ module instructiondecoder
 				RegDst = 0;//1'bx;
 				RegWr = 0;
 				AlUSrc = 1;
-				MemWr = 0; //??
-				MemToReg = 0; //???
+				MemWr = 0;
+				MemToReg = 0;
 				ALUcntrl = ALU_SUB;
 				branch = 1;
 			end
 
 			XORI: begin
-				// TODO
 				RegDst = 0;
 				RegWr = 1;
 				AlUSrc = 0;
 				MemWr = 0;
-				MemToReg = 0; //???
+				MemToReg = 0;
 				ALUcntrl = ALU_XOR;
 			end
 
 			J: begin
-				// TODO
 				RegDst = 0;//1'bx;
 				RegWr = 0;//1'bx;
 				AlUSrc = 0;//1'bx;
 				MemWr = 0;
-				MemToReg = 0; //???
+				MemToReg = 0;
 				ALUcntrl = 4'b0;//4'bx;
 				jump = 1;
 			end
 
 			JAL: begin
-				// TODO
 				RegDst = 0;
 				RegWr = 1;
 				AlUSrc = 0;//1'bx;
 				MemWr = 0;
-				MemToReg = 0;//1'bx; //???
+				MemToReg = 0;//1'bx;
 				ALUcntrl = 4'b0;//4'bx;
 				jump = 1;
 				jal = 1;
@@ -126,20 +123,18 @@ module instructiondecoder
 			R_TYPE: begin
 				case(funct)
 					JR: begin
-						// TODO
-						RegDst = 0;//1'bx; //??
-						RegWr = 0;//1'bx; //??
-						AlUSrc = 0;//1'bx; //??
-						MemWr = 0;		//??
-						MemToReg = 0; //???
-						ALUcntrl = 4'b0;//4'bx; //??
+						RegDst = 0;//1'bx;
+						RegWr = 0;//1'bx;
+						AlUSrc = 0;//1'bx;
+						MemWr = 0;
+						MemToReg = 0;
+						ALUcntrl = 4'b0;//4'bx;
 						jump = 1;
 						jr = 1;
 						rs = 5'd31;
 					end
 
 					ADD: begin
-						// TODO
 						RegDst = 1;
 						RegWr = 1;
 						AlUSrc = 1;
@@ -149,7 +144,6 @@ module instructiondecoder
 					end
 
 					SUB: begin
-						// TODO
 						RegDst = 1;
 						RegWr = 1;
 						AlUSrc = 1;
@@ -159,7 +153,6 @@ module instructiondecoder
 					end
 
 					SLT: begin
-						// TODO
 						RegDst = 1;
 						RegWr = 1;
 						AlUSrc = 1;
