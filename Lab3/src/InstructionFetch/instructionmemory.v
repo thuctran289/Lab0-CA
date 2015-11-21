@@ -1,4 +1,4 @@
-module memory(clk, regWE, Addr, DataIn, DataOut);
+module instructionmemory(clk, regWE, Addr, DataIn, DataOut);
   	input clk, regWE;
   	input[31:0] Addr;
   	input[31:0] DataIn;

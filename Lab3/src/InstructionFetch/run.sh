@@ -15,5 +15,5 @@ vvp testmux.t.vcd
 iverilog -o testFullAdder30.t.vcd testbenches/FullAdder30.t.v FullAdder30.v 
 vvp testFullAdder30.t.vcd
 
-iverilog -o instructionfetch.t.vcd testbenches/instructionfetch.t.v instructionfetch.v mux.v programcounter.v signextend.v FullAdder30.v concatenate.v memory.v
+iverilog -o instructionfetch.t.vcd testbenches/instructionfetch.t.v instructionfetch.v mux.v programcounter.v signextend.v FullAdder30.v concatenate.v instructionmemory.v
 vvp instructionfetch.t.vcd 
