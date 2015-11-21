@@ -22,11 +22,12 @@ module regfile
 
 	wire[31:0] regOut[31:0];
 	register32zero regZero(regOut[0], WriteData, wrenable[0], Clk);
-
+	initial regZero.q = 0;
 	genvar i;
 	generate
 		for (i=1; i<32; i=i+1) begin : regGenerator
 			register32 reg32(regOut[i], WriteData, wrenable[i], Clk);
+			initial reg32.q = 0;
 		end
 	endgenerate
 	mux32to1by32 mux1(ReadData1, ReadRegister1, regOut[0], regOut[1], regOut[2], regOut[3], regOut[4], regOut[5], regOut[6], regOut[7], regOut[8], regOut[9], regOut[10], regOut[11], regOut[12], regOut[13], regOut[14], regOut[15], regOut[16], regOut[17], regOut[18], regOut[19], regOut[20], regOut[21], regOut[22], regOut[23], regOut[24], regOut[25], regOut[26], regOut[27], regOut[28], regOut[29], regOut[30], regOut[31]);

@@ -4,7 +4,7 @@ module testcpu();
 	cpu dut(.clk(clk));
 
 	initial clk=0;
-    always #10 clk=!clk;
+    always #2 clk=!clk;
 
 	initial begin
 		$dumpfile("cpu.t.vcd");
@@ -12,7 +12,7 @@ module testcpu();
 	    
 	    $display("CPU test bench");
         $display("--------------------------");
-		#400;
+		#1000;
 		$finish;
 	end
 endmodule

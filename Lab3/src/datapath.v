@@ -11,7 +11,7 @@ module datapath
     input [15:0] imm16,
     input jal,
     input [29:0] jalAddr,
-    output [25:0] jumpAddr,
+//    output [25:0] jumpAddr,
     output zero,
     output [31:0] read1
 
@@ -19,7 +19,7 @@ module datapath
 
     wire [4:0] Aw;
     wire [31:0] Dw, dataMemMuxOut;
-    wire signextended;
+    wire [31:0] signextended;
 
     wire [31:0] read2, alu2in, ALUOut, memdOut;
 
@@ -27,7 +27,7 @@ module datapath
 
 
     muxNby2to1 #(5) regdst(Aw, RegDst, rt, rd);
-    registerfile regfile(read1, read2, Dw, rs, rt, Aw, regWr, clk);
+    regfile registerfile(read1, read2, Dw, rs, rt, Aw, regWr, clk);
     assign jumpAddr = read1[27:2];
     muxNby2to1 #(32) alusrc(alu2in, ALUSrc, read2, signextended);
     signextend #(32,16) immsixteen(imm16, signextended);
