@@ -18,30 +18,13 @@ initial begin
         $dumpvars(0, testinstructionfetch);
         j_Tinst = 26'b00000000000000000000000000;
         imm16 = 16'b0000000000000000;
+        jr_tinst = 32'd0;
         jr = 0;
         branch = 0;
         zero = 0;
         jump = 0;
         pc_we = 1;
-        #5
-        j_Tinst = 5;
-        jump = 1;
-        #1
-        jump = 0;
-        #10
-        branch = 1;
-        imm16 = 4;
-        zero = 1;
-        #5
-        zero = 0;
-        branch = 0;
-        jump = 1;
-        #10;
-        jump = 0;
-        branch = 1;
-        #1;
-        branch  =0;
-        #10;
+        #100
 	$finish;
 end
 

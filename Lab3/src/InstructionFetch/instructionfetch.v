@@ -39,7 +39,7 @@ module instructionfetch
 	FullAdder30 PC_Step(add_res, current_PC[31:2], branch_coord,nbranchAndzero);
 	muxNby2to1 #(30) jumpmachine(next_PC[31:2], jump, add_res,concat_res);
 	assign address = current_PC[31:2];
-	memory programMem(clk, 0, {address, 2'b00}, 0,instruction);
+	memory programMem(clk, 0, {2'b00,address}, 0,instruction);
 
 
 endmodule
