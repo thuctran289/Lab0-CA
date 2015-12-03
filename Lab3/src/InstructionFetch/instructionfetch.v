@@ -36,7 +36,7 @@ module instructionfetch
 	concatenate concat(current_PC[31:28], TInst, concat_res);
 	signextend signext(imm16, imm30);
 	muxNby2to1 #(30) brancher(branch_coord, branchAndzero, 30'b000000000000000000000000000000, imm30);
-	FullAdder30 PC_Step(add_res, current_PC[31:2], branch_coord,nbranchAndzero);
+	FullAdder30 PC_Step(add_res, current_PC[31:2], branch_coord,1);
 	muxNby2to1 #(30) jumpmachine(next_PC[31:2], jump, add_res,concat_res);
 	assign address = current_PC[31:2];
 	instructionmemory programMem(clk, 0, {2'b00,address}, 0,instruction);

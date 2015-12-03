@@ -4,7 +4,7 @@ module memory(clk, regWE, Addr, DataIn, DataOut);
   	input[31:0] DataIn;
   	output[31:0]  DataOut;
 
-	reg [31:0] mem[1023:0];  
+	reg [31:0] mem[2**16-1:0];  
 	always @(posedge clk)
   		if (regWE)
     		mem[Addr] <= DataIn;
