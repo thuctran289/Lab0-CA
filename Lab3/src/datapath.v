@@ -33,7 +33,7 @@ module datapath
     signextend #(32,16) immsixteen(imm16, signextended);
     MIPSALU alu(ALUcntrl, read1, alu2in, ALUOut, zero);
 
-    memory datamem(clk, memWr, ALUOut[31:2] - 3'h201, read2, memdOut);
+    memory datamem(clk, memWr, ALUOut[31:2] - 14'b00100000000000, read2, memdOut);
     muxNby2to1 #(32) muxmemtoreg(dataMemMuxOut, memToReg, ALUOut, memdOut);
 
     muxNby2to1 #(32) jalMux(Dw, jal, dataMemMuxOut, {jalAddr, 2'b00});
