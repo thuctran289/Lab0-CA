@@ -64,7 +64,7 @@ module instructiondecoder
 			LW: begin
 				RegDst = 0;
 				RegWr = 1;
-				AlUSrc = 0;
+				AlUSrc = 1;
 				MemWr = 0;
 				MemToReg = 1;
 				ALUcntrl = ALU_ADD;
@@ -73,7 +73,7 @@ module instructiondecoder
 			SW: begin
 				RegDst = 0;//1'bx;
 				RegWr = 0;
-				AlUSrc = 0;
+				AlUSrc = 1;
 				MemWr = 1;
 				MemToReg = 1;
 				ALUcntrl = ALU_ADD;
@@ -82,7 +82,7 @@ module instructiondecoder
 			BNE: begin
 				RegDst = 0;//1'bx;
 				RegWr = 0;
-				AlUSrc = 1;
+				AlUSrc = 0;
 				MemWr = 0;
 				MemToReg = 0;
 				ALUcntrl = ALU_SUB;
