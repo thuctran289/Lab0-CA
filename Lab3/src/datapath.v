@@ -29,11 +29,11 @@ module datapath
     muxNby2to1 #(5) regdst(Aw, regDst, rt, rd);
     regfile registerfile(read1, read2, Dw, rs, rt, Aw, regWr, clk);
     assign jumpAddr = read1[27:2];
-    muxNby2to1 #(32) alusrc(alu2in, ALUSrc, read2, signextended);
+    muxNby2to1 #(32) alusrc(alu2in, ALUSrc, signextended, read2);
     signextend #(32,16) immsixteen(imm16, signextended);
     MIPSALU alu(ALUcntrl, read1, alu2in, ALUOut, zero);
 
-    memory datamem(clk, memWr, ALUOut[31:2], read2, memdOut);
+    memory datamem(clk, memWr, ALUOut[31:2] - 3'h201, read2, memdOut);
     muxNby2to1 #(32) muxmemtoreg(dataMemMuxOut, memToReg, ALUOut, memdOut);
 
     muxNby2to1 #(32) jalMux(Dw, jal, dataMemMuxOut, {jalAddr, 2'b00});
