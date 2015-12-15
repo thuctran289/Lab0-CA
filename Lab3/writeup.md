@@ -14,7 +14,6 @@ We created a single-cycle MIPS CPU that can implement the following instructions
 * SUB
 * SLT
 
-
 ## Block Diagram
 ![block diagram](blockDiagram.png)
 
@@ -42,7 +41,7 @@ Our area cost, however, is nowhere near enough to take up all of the FPGA's reso
 - Flip Flops: 1030, 2.93%
 - LUT: 2077, 11.8%
 - Memory LUT: 1024, 17.04%
-- I/O: 2, 2% (including setting an LED in order to use Vivado, due to it's requirement of having an output)
+- I/O: 2, 2% (including setting an LED in order to use Vivado, due to its requirement of having an output)
 - Clock Buffer: 1, 3.12%
 
 ## Workplan Reflection:
